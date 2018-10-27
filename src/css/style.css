@@ -1,0 +1,12 @@
+body {
+	margin: 0;
+	background: #011;
+	overflow: hidden;
+	box-shadow: inset 0px -5vw 52vw #032;
+}
+
+#c {
+	display: block;
+	touch-action: none;
+	transform: translateZ(0);
+}
