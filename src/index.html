@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-  <!--  Meta  -->
   <meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>Menja!</title>
 
-  <!--  Styles  -->
+  <!-- build:css combined.css -->
   <link rel="stylesheet" href="css/style.css">
+  <!-- endbuild -->
 </head>
 <body>
 	<!-- Game canvas	 -->
   <canvas id="c"></canvas>
 
-  <!-- Scripts -->
-	<!-- npx babel-minify menja.js --out-file menja.min.js -->
-	<script>console.clear();</script>
-	<script src="js/globalConfig.js"></script>
+  <!-- build:remove -->
+  <script>console.clear();</script>
+  <!-- endbuild -->
+
+  <!-- build:js combined.js -->
+  <script src="js/globalConfig.js"></script>
   <script src="js/utils.js"></script>
-	<script src="js/3dUtils.js"></script>
+  <script src="js/3dUtils.js"></script>
   <script src="js/getTarget.js"></script>
-	<script src="js/tick.js"></script>
-	<script src="js/draw.js"></script>
+  <script src="js/tick.js"></script>
+  <script src="js/draw.js"></script>
   <script src="js/canvas.js"></script>
   <script src="js/interaction.js"></script>
   <script src="js/index.js"></script>
+  <!-- endbuild -->
 </body>
 </html>

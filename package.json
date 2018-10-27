@@ -1,0 +1,39 @@
+{
+  "name": "menja",
+  "version": "0.1.0",
+  "description": "A game about smashing cubes.",
+  "private": true,
+  "scripts": {
+    "start": "browser-sync start --server src --files src",
+    "build": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MilllerTime/menja.git"
+  },
+  "keywords": [
+    "game",
+    "3d",
+    "canvas"
+  ],
+  "author": "Caleb Miller",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/MilllerTime/menja/issues"
+  },
+  "homepage": "https://github.com/MilllerTime/menja#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "chalk": "^2.4.1",
+    "cssnano": "^4.1.7",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel-minify": "^0.5.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-iife": "^0.3.0",
+    "gulp-inline": "^0.1.3",
+    "gulp-useref": "^3.1.5",
+    "gzip-size": "^5.0.0",
+    "run-sequence": "^2.2.1"
+  }
+}
