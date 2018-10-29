@@ -1,3 +1,8 @@
+// Pool target instances by color
+const targetPool = {};
+targetHues.forEach(hue => targetPool[hue] = []);
+
+
 const getTarget = (() => {
 
 	// Cached array instances, no need to allocate every time.
@@ -10,14 +15,19 @@ const getTarget = (() => {
 	return function getTarget () {
 		const hue = pickOne(targetHues);
 
-		const target = new Entity({
-			model: makeRecursiveCubeModel({
-				recursionLevel: 1,
-				splitFn: mengerSpongeSplit,
-				color: { h: hue, s: 80, l: 50 },
-				scale: targetRadius
-			})
-		});
+		let target = targetPool[hue].pop();
+
+		if (!target) {
+			target = new Entity({
+				model: optimizeModel(makeRecursiveCubeModel({
+					recursionLevel: 1,
+					splitFn: mengerSpongeSplit,
+					color: { h: hue, s: 80, l: 50 },
+					scale: targetRadius
+				}))
+			});
+			target.hue = hue;
+		}
 
 		const spinSpeeds = [
 			Math.random() * 0.1 - 0.05,
@@ -43,3 +53,9 @@ const getTarget = (() => {
 		return target;
 	}
 })();
+
+
+const returnTarget = target => {
+	target.reset();
+	targetPool[target.hue].push(target);
+};

@@ -1,16 +1,22 @@
 // Interaction
 // -----------------------------
+let isChangingSpeed = false;
 
 function handlePointerDown(x, y) {
 	if (!pointerIsDown) {
 		pointerIsDown = true;
 		pointerScreen.x = x;
 		pointerScreen.y = y;
+
+		if (y > window.innerHeight - 40) {
+			isChangingSpeed = true;
+		}
 	}
 }
 
 function handlePointerUp() {
 	pointerIsDown = false;
+	isChangingSpeed = false;
 	touchPoints.push({
 			touchBreak: true,
 			life: touchPointLife
@@ -22,7 +28,7 @@ function handlePointerMove(x, y) {
 		pointerScreen.x = x;
 		pointerScreen.y = y;
 
-		if (y > window.innerHeight - 40) {
+		if (isChangingSpeed) {
 			gameSpeed = x / window.innerWidth;
 		}
 	}

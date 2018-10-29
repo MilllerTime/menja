@@ -1,6 +1,6 @@
 
 let spawnTime = 0;
-const spawnDelay = 300;
+const spawnDelay = 1000;
 const maxSpawnX = 450;
 const targets = [];
 const pointerDelta = { x: 0, y: 0 };
@@ -80,6 +80,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 		if (target.y > centerY + targetHitRadius) {
 			targets.splice(i, 1);
+			returnTarget(target);
 			continue;
 		} else if (target.y < ceiling) {
 			target.y = ceiling;
@@ -109,8 +110,8 @@ function tick(width, height, simTime, simSpeed, lag) {
 			const hitTestCount = Math.ceil(pointerSpeed / targetRadius * 2);
 			// Start loop at `1` and use `<=` check, so we skip 0% and end up at 100%.
 			// This omits the previous point position, and includes the most recent.
-			for (let i=1; i<=hitTestCount; i++) {
-				const percent = 1 - (i / hitTestCount);
+			for (let ii=1; ii<=hitTestCount; ii++) {
+				const percent = 1 - (ii / hitTestCount);
 				const hitX = pointerScene.x - pointerDelta.x * percent;
 				const hitY = pointerScene.y - pointerDelta.y * percent;
 				const distance = Math.hypot(
@@ -126,6 +127,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 						target.yD += pointerDeltaScaled.y * hitDampening;
 						target.rotateXD += pointerDeltaScaled.y * 0.001;
 						target.rotateYD += pointerDeltaScaled.x * 0.001;
+						createBurst(target);
+						targets.splice(i, 1);
+						returnTarget(target);
 					}
 					// Break the current loop and continue the outer loop.
 					// This skips to processing the next target.
@@ -138,15 +142,53 @@ function tick(width, height, simTime, simSpeed, lag) {
 		target.hit = false;
 	}
 
+	for (let i = cubes.length - 1; i >= 0; i--) {
+		const cube = cubes[i];
+		cube.x += cube.xD * simSpeed;
+		cube.y += cube.yD * simSpeed;
+		cube.z += cube.zD * simSpeed;
+
+		// Removal conditions
+		if (
+			// Bottom of screen
+			cube.y > centerY + targetHitRadius ||
+			cube.x < -centerX - targetHitRadius ||
+			// Sides of screen
+			cube.x > centerX + targetHitRadius ||
+			// Too close to camera (based on a percentage and constant value)
+			cube.z > cameraDistance * 0.8 - targetRadius
+		) {
+			cubes.splice(i, 1);
+			returnCube(cube);
+			continue;
+		}
+
+		if (cube.y < ceiling) {
+			cube.y = ceiling;
+			cube.yD = 2;
+		}
+
+		cube.yD += 0.3 * simSpeed;
+		cube.rotateX += cube.rotateXD * simSpeed;
+		cube.rotateY += cube.rotateYD * simSpeed;
+		cube.rotateZ += cube.rotateZD * simSpeed;
+		cube.transform();
+	}
+
 	// 3D transforms
 	// -------------------
 
 	// Aggregate all scene vertices/polys
 	allVertices.length = 0;
 	allPolys.length = 0;
-	targets.forEach(target => {
-		allVertices.push(...target.vertices);
-		allPolys.push(...target.polys);
+	targets.forEach(entity => {
+		allVertices.push(...entity.vertices);
+		allPolys.push(...entity.polys);
+	});
+
+	cubes.forEach(entity => {
+		allVertices.push(...entity.vertices);
+		allPolys.push(...entity.polys);
 	});
 
 	// Scene calculations/transformations
