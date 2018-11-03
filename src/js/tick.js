@@ -176,45 +176,45 @@ function tick(width, height, simTime, simSpeed, lag) {
 	const fragLeftBound = -width;
 	const fragRightBound = width;
 
-	for (let i = cubes.length - 1; i >= 0; i--) {
-		const cube = cubes[i];
-		cube.x += cube.xD * simSpeed;
-		cube.y += cube.yD * simSpeed;
-		cube.z += cube.zD * simSpeed;
+	for (let i = frags.length - 1; i >= 0; i--) {
+		const frag = frags[i];
+		frag.x += frag.xD * simSpeed;
+		frag.y += frag.yD * simSpeed;
+		frag.z += frag.zD * simSpeed;
 
-		cube.xD *= simAirDrag;
-		cube.yD *= simAirDrag;
-		cube.zD *= simAirDrag;
+		frag.xD *= simAirDrag;
+		frag.yD *= simAirDrag;
+		frag.zD *= simAirDrag;
 
-		if (cube.y < ceiling) {
-			cube.y = ceiling;
-			cube.yD = 2;
+		if (frag.y < ceiling) {
+			frag.y = ceiling;
+			frag.yD = 2;
 		}
 
-		if (cube.z < fragBackboardZ) {
-			cube.z = fragBackboardZ;
-			cube.zD *= -boundDamping;
+		if (frag.z < fragBackboardZ) {
+			frag.z = fragBackboardZ;
+			frag.zD *= -boundDamping;
 		}
 
-		cube.yD += gravity * simSpeed;
-		cube.rotateX += cube.rotateXD * simSpeed;
-		cube.rotateY += cube.rotateYD * simSpeed;
-		cube.rotateZ += cube.rotateZD * simSpeed;
-		cube.transform();
-		cube.project();
+		frag.yD += gravity * simSpeed;
+		frag.rotateX += frag.rotateXD * simSpeed;
+		frag.rotateY += frag.rotateYD * simSpeed;
+		frag.rotateZ += frag.rotateZD * simSpeed;
+		frag.transform();
+		frag.project();
 
 		// Removal conditions
 		if (
 			// Bottom of screen
-			cube.projected.y > centerY + targetHitRadius ||
+			frag.projected.y > centerY + targetHitRadius ||
 			// Sides of screen
-			cube.projected.x < fragLeftBound ||
-			cube.projected.x > fragRightBound ||
+			frag.projected.x < fragLeftBound ||
+			frag.projected.x > fragRightBound ||
 			// Too close to camera (based on a percentage and constant value)
-			cube.projected.z > 0.8*cameraDistance - 5*targetRadius
+			frag.projected.z > 0.8*cameraDistance - 5*targetRadius
 		) {
-			cubes.splice(i, 1);
-			returnCube(cube);
+			frags.splice(i, 1);
+			returnFrag(frag);
 			continue;
 		}
 	}
@@ -254,7 +254,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 		allShadowPolys.push(...entity.shadowPolys);
 	});
 
-	cubes.forEach(entity => {
+	frags.forEach(entity => {
 		allVertices.push(...entity.vertices);
 		allPolys.push(...entity.polys);
 		allShadowVertices.push(...entity.shadowVertices);

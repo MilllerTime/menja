@@ -1,8 +1,8 @@
-// Track all active cubes
-const cubes = [];
-// Pool inactive cubes by color
-const cubePool = {};
-targetHues.forEach(hue => cubePool[hue] = []);
+// Track all active fragments
+const frags = [];
+// Pool inactive fragments by color
+const fragPool = {};
+targetHues.forEach(hue => fragPool[hue] = []);
 
 const createBurst = (() => {
 	// Precompute some private data to be reused for all bursts.
@@ -15,11 +15,11 @@ const createBurst = (() => {
 	const positionNormals = cloneVertices(basePositionNormals);
 
 
-	const cubeCount = basePositions.length;
+	const fragCount = basePositions.length;
 
 	return (target, force=1) => {
-		// Calculate cube positions, and what would have been the previous positions
-		// when still a part of the larger cube.
+		// Calculate fragment positions, and what would have been the previous positions
+		// when still a part of the larger target.
 		transformVertices(
 			basePositions, positions,
 			target.x, target.y, target.z,
@@ -33,9 +33,9 @@ const createBurst = (() => {
 			1, 1, 1
 		);
 
-		// Compute velocity of each cube, based on previous positions.
+		// Compute velocity of each fragment, based on previous positions.
 		// Will write to `velocities` array.
-		for (let i=0; i<cubeCount; i++) {
+		for (let i=0; i<fragCount; i++) {
 			const position = positions[i];
 			const prevPosition = prevPositions[i];
 			const velocity = velocities[i];
@@ -56,48 +56,48 @@ const createBurst = (() => {
 		);
 
 
-		for (let i=0; i<cubeCount; i++) {
+		for (let i=0; i<fragCount; i++) {
 			const position = positions[i];
 			const velocity = velocities[i];
 			const normal = positionNormals[i];
 
-			let cube = cubePool[target.hue].pop();
+			let frag = fragPool[target.hue].pop();
 
-			if (!cube) {
-				cube = new Entity({
+			if (!frag) {
+				frag = new Entity({
 					model: makeCubeModel({
 						color: target.polys[0].color,
 						scale: fragRadius
 					})
 				});
-				cube.hue = target.hue;
+				frag.hue = target.hue;
 			}
 
-			cube.x = position.x;
-			cube.y = position.y;
-			cube.z = position.z;
-			cube.rotateX = target.rotateX;
-			cube.rotateY = target.rotateY;
-			cube.rotateZ = target.rotateZ;
+			frag.x = position.x;
+			frag.y = position.y;
+			frag.z = position.z;
+			frag.rotateX = target.rotateX;
+			frag.rotateY = target.rotateY;
+			frag.rotateZ = target.rotateZ;
 
 
 			const burstSpeed = 2 * force;
 			const randSpeed = 2 * force;
 			const rotateScale = 0.015;
-			cube.xD = velocity.x + (normal.x * burstSpeed) + (Math.random() * randSpeed);
-			cube.yD = velocity.y + (normal.y * burstSpeed) + (Math.random() * randSpeed);
-			cube.zD = velocity.z + (normal.z * burstSpeed) + (Math.random() * randSpeed);
-			cube.rotateXD = cube.xD * rotateScale;
-			cube.rotateYD = cube.yD * rotateScale;
-			cube.rotateZD = cube.zD * rotateScale;
+			frag.xD = velocity.x + (normal.x * burstSpeed) + (Math.random() * randSpeed);
+			frag.yD = velocity.y + (normal.y * burstSpeed) + (Math.random() * randSpeed);
+			frag.zD = velocity.z + (normal.z * burstSpeed) + (Math.random() * randSpeed);
+			frag.rotateXD = frag.xD * rotateScale;
+			frag.rotateYD = frag.yD * rotateScale;
+			frag.rotateZD = frag.zD * rotateScale;
 
-			cubes.push(cube);
+			frags.push(frag);
 		};
 	}
 })();
 
 
-const returnCube = cube => {
-	cube.reset();
-	cubePool[cube.hue].push(cube);
+const returnFrag = frag => {
+	frag.reset();
+	fragPool[frag.hue].push(frag);
 };
