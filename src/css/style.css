@@ -1,12 +1,24 @@
 body {
 	margin: 0;
-	background: #011;
+	background-color: #000;
+	background-image: radial-gradient(ellipse at top, #1e6a8b 0.0%, #1e6281 11.1%, #1e5977 22.2%, #1d506d 33.3%, #1c4863 44.4%, #1b4059 55.6%, #19384f 66.7%, #173146 77.8%, #14293c 88.9%, #112233 100.0%);
 	overflow: hidden;
-	box-shadow: inset 0px -5vw 52vw #032;
 }
 
 #c {
 	display: block;
 	touch-action: none;
 	transform: translateZ(0);
+}
+
+.score-lbl {
+	position: absolute;
+	top: 0.65em;
+	left: 0.65em;
+	font-family: monospace;
+	font-size: calc(14px + 2vw + 1vh);
+	font-weight: bold;
+	color: rgba(255, 255, 255, 0.75);
+	pointer-events: none;
+	user-select: none;
 }

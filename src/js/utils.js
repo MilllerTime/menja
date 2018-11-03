@@ -1,7 +1,40 @@
+
+const invariant = (condition, message) => {
+	if (!condition) throw new Error(message);
+};
+
+
+////////////////////
+// Math Constants //
+////////////////////
+
+const PI = Math.PI;
+const TAU = Math.PI * 2;
+const ETA = Math.PI * 0.5;
+
+
+
+
+
 ////////////////////
 // Random Helpers //
 ////////////////////
+
+// Generates a random number between min (inclusive) and max (exclusive)
+const random = (min, max) => Math.random() * (max - min) + min;
+
+// Generates a random integer between and possibly including min and max values
+const randomInt = (min, max) => ((Math.random() * (max - min + 1)) | 0) + min;
+
+// Returns a random element from an array
 const pickOne = arr => arr[Math.random() * arr.length | 0];
+
+// Clamps a number between min and max values (inclusive)
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+// Linearly interpolate between numbers a and b by a specific amount.
+// mix >= 0 && mix <= 1
+const lerp = (a, b, mix) => (b - a) * mix + a;
 
 
 
@@ -13,6 +46,15 @@ const pickOne = arr => arr[Math.random() * arr.length | 0];
 ////////////////////
 // Vector Helpers //
 ////////////////////
+
+const normalize = v => {
+	const mag = Math.hypot(v.x, v.y, v.z);
+	return {
+		x: v.x / mag,
+		y: v.y / mag,
+		z: v.z / mag
+	};
+}
 
 // Curried math helpers
 const add = a => b => a + b;
@@ -37,6 +79,19 @@ const scaleVector = scale => vector => {
 // Clone array and all vertices.
 function cloneVertices(vertices) {
 	return vertices.map(v => ({ x: v.x, y: v.y, z: v.z }));
+}
+
+// Copy vertex data from one array into another.
+// Arrays must be the same length.
+function copyVerticesTo(arr1, arr2) {
+	const len = arr1.length;
+	for (let i=0; i<len; i++) {
+		const v1 = arr1[i];
+		const v2 = arr2[i];
+		v2.x = v1.x;
+		v2.y = v1.y;
+		v2.z = v1.z;
+	}
 }
 
 // Compute triangle midpoint.
@@ -73,7 +128,7 @@ function computePolyDepth(poly) {
 	const dX = poly.middle.x;
 	const dY = poly.middle.y;
 	const dZ = poly.middle.z - cameraDistance;
-	poly.depth = Math.sqrt(dX*dX + dY*dY + dZ*dZ);
+	poly.depth = Math.hypot(dX, dY, dZ);
 }
 
 // Compute normal of any polygon. Uses normalized vector cross product.
@@ -95,7 +150,7 @@ function computePolyNormal(poly, normalName) {
 	const ny = az*bx - ax*bz;
 	const nz = ax*by - ay*bx;
 	// Compute magnitude of normal and normalize
-	const mag = Math.sqrt(nx*nx + ny*ny + nz*nz);
+	const mag = Math.hypot(nx, ny, nz);
 	const polyNormal = poly[normalName];
 	polyNormal.x = nx / mag;
 	polyNormal.y = ny / mag;

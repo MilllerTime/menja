@@ -14,8 +14,18 @@ let pointerScene = { x: 0, y: 0 };
 const minPointerSpeed = 10;
 // The hit speed affects the direction the target post-hit. This number dampens that force.
 const hitDampening = 0.1;
+// Backboard receives shadows and is the farthest negative Z position of entities.
+const backboardZ = -400;
+const shadowColor = '#14293c';
+// How much air drag is applied to standard objects
+const airDrag = 0.022;
+const gravity = 0.3;
+// Spark config
+const sparkColor = 'rgba(170,221,255,.9)';
+const sparkThickness = 2.2;
+const airDragSpark = 0.1;
 // Track pointer positions to show trail
-const touchTrailColor = 'rgba(170, 221, 255, 0.62)';
+const touchTrailColor = 'rgba(170,221,255,.62)';
 const touchTrailThickness = 7;
 const touchPointLife = 120;
 const touchPoints = [];
@@ -23,6 +33,9 @@ const touchPoints = [];
 const targetRadius = 40;
 const targetHitRadius = 50;
 const targetHues = [16, 150, 192, 268, 348];
+// Size of target fragments
+const fragRadius = targetRadius / 3;
+
 
 
 // Game canvas element needed in setup.js and interaction.js
@@ -30,10 +43,14 @@ const canvas = document.querySelector('#c');
 
 // 3D camera config
 // Affects perspective
-const cameraDistance = 600;
+const cameraDistance = 900;
 // Does not affect perspective
 const sceneScale = 1;
 
 // Globals used to accumlate all vertices/polygons in each frame
 const allVertices = [];
 const allPolys = [];
+const allShadowVertices = [];
+const allShadowPolys = [];
+
+let score = 0;

@@ -29,6 +29,10 @@ const getTarget = (() => {
 			target.hue = hue;
 		}
 
+		target.hit = false;
+		target.health = 1;
+		if (hue === 348) target.health = 3; // red takes 3 hits
+
 		const spinSpeeds = [
 			Math.random() * 0.1 - 0.05,
 			Math.random() * 0.1 - 0.05
