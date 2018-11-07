@@ -1,8 +1,9 @@
 function draw(ctx, width, height, viewScale) {
+	PERF_START('draw');
+
 	const halfW = width / 2;
 	const halfH = height / 2;
 
-	PERF_START('draw');
 
 	// 3D Polys
 	// ---------------
@@ -26,8 +27,15 @@ function draw(ctx, width, height, viewScale) {
 	PERF_END('drawShadows');
 
 	PERF_START('drawPolys');
+
+	ctx.lineJoin = 'bevel';
 	allPolys.forEach(p => {
 		if (p.normalCamera.z < 0) return;
+
+		if (p.strokeWidth !== 0) {
+			ctx.lineWidth = p.strokeWidth;
+			ctx.strokeStyle = p.strokeColor;
+		}
 
 		const { vertices } = p;
 		const lastV = vertices[vertices.length - 1];
@@ -43,6 +51,10 @@ function draw(ctx, width, height, viewScale) {
 			ctx.lineTo(v.x, v.y);
 		}
 		ctx.fill();
+
+		if (p.strokeWidth !== 0) {
+			ctx.stroke();
+		}
 	});
 	PERF_END('drawPolys');
 

@@ -11,12 +11,12 @@ let pointerScreen = { x: 0, y: 0 };
 // Same as `pointerScreen`, but converted to scene coordinates in rAF.
 let pointerScene = { x: 0, y: 0 };
 // Minimum speed of pointer before "hits" are counted.
-const minPointerSpeed = 10;
+const minPointerSpeed = 80;
 // The hit speed affects the direction the target post-hit. This number dampens that force.
 const hitDampening = 0.1;
 // Backboard receives shadows and is the farthest negative Z position of entities.
 const backboardZ = -400;
-const shadowColor = '#14293c';
+const shadowColor = '#1f3347';
 // How much air drag is applied to standard objects
 const airDrag = 0.022;
 const gravity = 0.3;
@@ -32,7 +32,11 @@ const touchPoints = [];
 // Size of in-game targets. This affects rendered size and hit area.
 const targetRadius = 40;
 const targetHitRadius = 50;
-const targetHues = [16, 150, 192, 268, 348];
+const targetHues = [20, 148, 188, 278, 346];
+const makeTargetGlueColor = target => {
+	const alpha = (target.health - 1) / (target.maxHealth - 1);
+	`rgba(170,221,255,${alpha.toFixed(3)})`;
+};
 // Size of target fragments
 const fragRadius = targetRadius / 3;
 

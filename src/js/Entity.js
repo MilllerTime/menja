@@ -6,6 +6,8 @@ class Entity {
 		const polys = model.polys.map(p => ({
 			vertices: p.vIndexes.map(vIndex => vertices[vIndex]),
 			color: p.color,
+			strokeWidth: 0, // Set to non-zero value to draw stroke
+			strokeColor: '#000',
 			depth: 0,
 			middle: { x: 0, y: 0, z: 0 },
 			normalWorld: { x: 0, y: 0, z: 0 },

@@ -78,7 +78,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 	// Animate targets and remove when offscreen
 	const leftBound = -centerX + targetRadius;
 	const rightBound = centerX - targetRadius;
-	const ceiling = -centerY - 200;
+	const ceiling = -centerY - 120;
 	const boundDamping = 0.4;
 
 	targetLoop:
@@ -89,8 +89,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 		if (target.y < ceiling) {
 			target.y = ceiling;
-			const maxReboundSpeed = 3;
-			target.yD = Math.min(maxReboundSpeed, -target.yD);
+			target.yD = 0;
 		}
 
 		if (target.x < leftBound) {
@@ -122,47 +121,54 @@ function tick(width, height, simTime, simSpeed, lag) {
 		}
 
 
-		if (pointerSpeedScaled > minPointerSpeed) {
-			// If pointer is moving really fast, we want to hittest multiple points along the path.
-			// We can't use scaled pointer speed to determine this, since we care about actual screen
-			// distance covered.
-			const hitTestCount = Math.ceil(pointerSpeed / targetRadius * 2);
-			// Start loop at `1` and use `<=` check, so we skip 0% and end up at 100%.
-			// This omits the previous point position, and includes the most recent.
-			for (let ii=1; ii<=hitTestCount; ii++) {
-				const percent = 1 - (ii / hitTestCount);
-				const hitX = pointerScene.x - pointerDelta.x * percent;
-				const hitY = pointerScene.y - pointerDelta.y * percent;
-				const distance = Math.hypot(
-					hitX - target.projected.x,
-					hitY - target.projected.y
-				);
+		// If pointer is moving really fast, we want to hittest multiple points along the path.
+		// We can't use scaled pointer speed to determine this, since we care about actual screen
+		// distance covered.
+		const hitTestCount = Math.ceil(pointerSpeed / targetRadius * 2);
+		// Start loop at `1` and use `<=` check, so we skip 0% and end up at 100%.
+		// This omits the previous point position, and includes the most recent.
+		for (let ii=1; ii<=hitTestCount; ii++) {
+			const percent = 1 - (ii / hitTestCount);
+			const hitX = pointerScene.x - pointerDelta.x * percent;
+			const hitY = pointerScene.y - pointerDelta.y * percent;
+			const distance = Math.hypot(
+				hitX - target.projected.x,
+				hitY - target.projected.y
+			);
 
-				if (distance <= targetHitRadius) {
-					// Hit! (though we don't want to allow hits on multiple sequential frames)
-					if (!target.hit) {
-						target.hit = true;
+			if (distance <= targetHitRadius) {
+				// Hit! (though we don't want to allow hits on multiple sequential frames)
+				if (!target.hit) {
+					target.hit = true;
+
+					target.xD += pointerDeltaScaled.x * hitDampening;
+					target.yD += pointerDeltaScaled.y * hitDampening;
+					target.rotateXD += pointerDeltaScaled.y * 0.001;
+					target.rotateYD += pointerDeltaScaled.x * 0.001;
+
+					const sparkSpeed = 7 + pointerSpeedScaled * 0.125;
+
+					if (pointerSpeedScaled > minPointerSpeed) {
 						target.health--;
 						updateScore(10);
-						target.xD += pointerDeltaScaled.x * hitDampening;
-						target.yD += pointerDeltaScaled.y * hitDampening;
-						target.rotateXD += pointerDeltaScaled.y * 0.001;
-						target.rotateYD += pointerDeltaScaled.x * 0.001;
 
 						if (target.health <= 0) {
 							createBurst(target, forceMultiplier);
-							sparkBurst(hitX, hitY, 3, 7+pointerSpeedScaled*0.125);
+							sparkBurst(hitX, hitY, 7, sparkSpeed);
 							targets.splice(i, 1);
 							returnTarget(target);
 						} else {
-							sparkBurst(hitX, hitY, 8, 7+pointerSpeedScaled*0.125);
+							sparkBurst(hitX, hitY, 8, sparkSpeed);
+							glueShedSparks(target);
+							updateTargetHealth(target, 0);
 						}
-
+					} else {
+						sparkBurst(hitX, hitY, 3, sparkSpeed);
 					}
-					// Break the current loop and continue the outer loop.
-					// This skips to processing the next target.
-					continue targetLoop;
 				}
+				// Break the current loop and continue the outer loop.
+				// This skips to processing the next target.
+				continue targetLoop;
 			}
 		}
 
@@ -188,7 +194,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 		if (frag.y < ceiling) {
 			frag.y = ceiling;
-			frag.yD = 2;
+			frag.yD = 0;
 		}
 
 		if (frag.z < fragBackboardZ) {
@@ -211,7 +217,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 			frag.projected.x < fragLeftBound ||
 			frag.projected.x > fragRightBound ||
 			// Too close to camera (based on a percentage and constant value)
-			frag.projected.z > 0.8*cameraDistance - 5*targetRadius
+			frag.projected.z > 0.8*cameraDistance - 6*targetRadius
 		) {
 			frags.splice(i, 1);
 			returnFrag(frag);

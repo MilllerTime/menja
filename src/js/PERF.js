@@ -1,20 +1,20 @@
 // Performance measuring tools
 
-// -----------------------------------------------
-// -----------------------------------------------
-// DUMMY SET - Comment everything in this file
-//             but these to reduce bundle size.
-// -----------------------------------------------
-// -----------------------------------------------
+// ------------------------------------
+// ------------------------------------
+// DUMMY SET
+// Comment everything in this file
+// but these to reduce bundle size.
+// ------------------------------------
 
-// const PERF_START = () => {};
-// const PERF_END = () => {};
-// const PERF_UPDATE = () => {};
+const PERF_START = () => {};
+const PERF_END = () => {};
+const PERF_UPDATE = () => {};
 
-// -----------------------------------------------
-// -----------------------------------------------
+// ------------------------------------
+// ------------------------------------
 
-
+/*
 const updateRate = 300; // ms
 let lastUpdateTime = performance.now();
 
@@ -70,3 +70,4 @@ const PERF_UPDATE = () => {
 		lastUpdateTime = performance.now();
 	}
 }
+*/

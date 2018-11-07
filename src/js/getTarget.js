@@ -30,8 +30,11 @@ const getTarget = (() => {
 		}
 
 		target.hit = false;
+		target.maxHealth = 3;
 		target.health = 1;
-		if (hue === 348) target.health = 3; // red takes 3 hits
+		if (hue === 346) target.health = 3; // red takes 3 hits
+
+		updateTargetHealth(target, 0);
 
 		const spinSpeeds = [
 			Math.random() * 0.1 - 0.05,
@@ -57,6 +60,17 @@ const getTarget = (() => {
 		return target;
 	}
 })();
+
+
+const updateTargetHealth = (target, healthDelta) => {
+	target.health += healthDelta;
+	const strokeWidth = target.health - 1;
+	const strokeColor = makeTargetGlueColor(target);
+	target.polys.forEach(p => {
+		p.strokeWidth = strokeWidth;
+		p.strokeColor = strokeColor;
+	});
+};
 
 
 const returnTarget = target => {

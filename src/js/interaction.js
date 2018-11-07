@@ -8,7 +8,7 @@ function handlePointerDown(x, y) {
 		pointerScreen.x = x;
 		pointerScreen.y = y;
 
-		if (y > window.innerHeight - 40) {
+		if (y < 40) {
 			isChangingSpeed = true;
 		}
 	}
