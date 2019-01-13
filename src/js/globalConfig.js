@@ -4,6 +4,13 @@
 // Timing multiplier for entire game engine.
 let gameSpeed = 1;
 
+// Colors
+const BLUE =   { r: 0x67, g: 0xd7, b: 0xf0 };
+const GREEN =  { r: 0xa6, g: 0xe0, b: 0x2c };
+const PINK =   { r: 0xfa, g: 0x24, b: 0x73 };
+const ORANGE = { r: 0xfe, g: 0x95, b: 0x22 };
+const allColors = [BLUE, GREEN, PINK, ORANGE];
+
 // Interaction state
 let pointerIsDown = false;
 // The last known position of the primary pointer in screen coordinates.`
@@ -11,12 +18,12 @@ let pointerScreen = { x: 0, y: 0 };
 // Same as `pointerScreen`, but converted to scene coordinates in rAF.
 let pointerScene = { x: 0, y: 0 };
 // Minimum speed of pointer before "hits" are counted.
-const minPointerSpeed = 80;
+const minPointerSpeed = 60;
 // The hit speed affects the direction the target post-hit. This number dampens that force.
 const hitDampening = 0.1;
 // Backboard receives shadows and is the farthest negative Z position of entities.
 const backboardZ = -400;
-const shadowColor = '#1f3347';
+const shadowColor = '#262e36';
 // How much air drag is applied to standard objects
 const airDrag = 0.022;
 const gravity = 0.3;
@@ -32,7 +39,6 @@ const touchPoints = [];
 // Size of in-game targets. This affects rendered size and hit area.
 const targetRadius = 40;
 const targetHitRadius = 50;
-const targetHues = [20, 148, 188, 278, 346];
 const makeTargetGlueColor = target => {
 	const alpha = (target.health - 1) / (target.maxHealth - 1);
 	`rgba(170,221,255,${alpha.toFixed(3)})`;

@@ -1,6 +1,7 @@
-// Pool target instances by color
-const targetPool = {};
-targetHues.forEach(hue => targetPool[hue] = []);
+// Pool target instances by color, using a Map.
+// keys are color objects, and values are arrays of targets.
+const targetPool = new Map(allColors.map(c=>([c, []])));
+
 
 
 const getTarget = (() => {
@@ -13,26 +14,26 @@ const getTarget = (() => {
 	];
 
 	return function getTarget () {
-		const hue = pickOne(targetHues);
+		const color = pickOne(allColors);
 
-		let target = targetPool[hue].pop();
+		let target = targetPool.get(color).pop();
 
 		if (!target) {
 			target = new Entity({
 				model: optimizeModel(makeRecursiveCubeModel({
 					recursionLevel: 1,
 					splitFn: mengerSpongeSplit,
-					color: { h: hue, s: 80, l: 50 },
+					color: color,
 					scale: targetRadius
 				}))
 			});
-			target.hue = hue;
+			target.color = color;
 		}
 
 		target.hit = false;
 		target.maxHealth = 3;
 		target.health = 1;
-		if (hue === 346) target.health = 3; // red takes 3 hits
+		if (color === PINK) target.health = 3; // red takes 3 hits
 
 		updateTargetHealth(target, 0);
 
@@ -75,5 +76,5 @@ const updateTargetHealth = (target, healthDelta) => {
 
 const returnTarget = target => {
 	target.reset();
-	targetPool[target.hue].push(target);
+	targetPool.get(target.color).push(target);
 };

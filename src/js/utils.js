@@ -38,6 +38,28 @@ const lerp = (a, b, mix) => (b - a) * mix + a;
 
 
 
+///////////////////
+// Color Helpers //
+///////////////////
+
+// Operates on an { r, g, b } color object.
+// Returns string hex code.
+// `lightness` must range from 0 to 1. 0 is pure black, 1 is pure white.
+const shadeColor = (color, lightness) => {
+	let other, mix;
+	if (lightness < 0.5) {
+		other = 0;
+		mix = 1 - (lightness * 2);
+	} else {
+		other = 255;
+		mix = lightness * 2 - 1;
+	}
+	// Inlined lerp
+	return '#' +
+		(lerp(color.r, other, mix) | 0).toString(16).padStart(2, '0') +
+		(lerp(color.g, other, mix) | 0).toString(16).padStart(2, '0') +
+		(lerp(color.b, other, mix) | 0).toString(16).padStart(2, '0');
+};
 
 
 

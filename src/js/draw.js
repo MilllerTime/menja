@@ -39,12 +39,14 @@ function draw(ctx, width, height, viewScale) {
 
 		const { vertices } = p;
 		const lastV = vertices[vertices.length - 1];
-		const normalLight = p.normalWorld.y * 0.7 + p.normalWorld.z * -0.7;
-		const lightness = normalLight > 0
-			? 10
-			: ((normalLight ** 32 - normalLight) / 2) * 90 + 10;
+		const normalLight = p.normalWorld.y * 0.5 + p.normalWorld.z * -0.5;
 
-		ctx.fillStyle = `hsl(${p.color.h},${p.color.s}%,${lightness}%)`;
+		const lightness = normalLight > 0
+			? 0.1
+			: ((normalLight ** 32 - normalLight) / 2) * 0.9 + 0.1;
+
+		ctx.fillStyle = shadeColor(p.color, lightness);
+
 		ctx.beginPath();
 		ctx.moveTo(lastV.x, lastV.y);
 		for (let v of vertices) {

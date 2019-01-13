@@ -1,8 +1,9 @@
 // Track all active fragments
 const frags = [];
-// Pool inactive fragments by color
-const fragPool = {};
-targetHues.forEach(hue => fragPool[hue] = []);
+// Pool inactive fragments by color, using a Map.
+// keys are color objects, and values are arrays of fragments.
+const fragPool = new Map(allColors.map(c=>([c, []])));
+
 
 const createBurst = (() => {
 	// Precompute some private data to be reused for all bursts.
@@ -61,16 +62,16 @@ const createBurst = (() => {
 			const velocity = velocities[i];
 			const normal = positionNormals[i];
 
-			let frag = fragPool[target.hue].pop();
+			let frag = fragPool.get(target.color).pop();
 
 			if (!frag) {
 				frag = new Entity({
 					model: makeCubeModel({
-						color: target.polys[0].color,
+						color: target.color,
 						scale: fragRadius
 					})
 				});
-				frag.hue = target.hue;
+				frag.color = target.color;
 			}
 
 			frag.x = position.x;
@@ -99,5 +100,5 @@ const createBurst = (() => {
 
 const returnFrag = frag => {
 	frag.reset();
-	fragPool[frag.hue].push(frag);
+	fragPool.get(frag.color).push(frag);
 };
