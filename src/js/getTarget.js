@@ -6,6 +6,9 @@ const targetPool = new Map(allColors.map(c=>([c, []])));
 
 const getTarget = (() => {
 
+	const shouldSpawnPink = makeSpawnerWithCooldown(0.3, 12000, { numUnits: 2 });
+	const shouldSpawnSlowmo = makeSpawnerWithCooldown(0.1, 20000, { numUnits: 1 });
+
 	// Cached array instances, no need to allocate every time.
 	const axisOptions = [
 		['x', 'y'],
@@ -13,11 +16,8 @@ const getTarget = (() => {
 		['z', 'x']
 	];
 
-	return function getTarget () {
-		const color = pickOne(allColors);
-
+	function getTargetOfColor(color) {
 		let target = targetPool.get(color).pop();
-
 		if (!target) {
 			target = new Entity({
 				model: optimizeModel(makeRecursiveCubeModel({
@@ -29,12 +29,29 @@ const getTarget = (() => {
 			});
 			target.color = color;
 		}
+		return target;
+	}
 
+	return function getTarget() {
+		// Target Parameters
+		// --------------------------------
+		let color = pickOne([BLUE, GREEN, ORANGE]);
+		let health = 1;
+		let maxHealth = 3;
+
+		// Target Parameter Overrides
+		// --------------------------------
+		if (shouldSpawnPink()) {
+			color = PINK;
+			health = 3;
+		}
+
+		// Target Creation
+		// --------------------------------
+		const target = getTargetOfColor(color);
 		target.hit = false;
-		target.maxHealth = 3;
-		target.health = 1;
-		if (color === PINK) target.health = 3; // red takes 3 hits
-
+		target.maxHealth = maxHealth;
+		target.health = health;
 		updateTargetHealth(target, 0);
 
 		const spinSpeeds = [

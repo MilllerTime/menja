@@ -62,5 +62,3 @@ const allVertices = [];
 const allPolys = [];
 const allShadowVertices = [];
 const allShadowPolys = [];
-
-let score = 0;

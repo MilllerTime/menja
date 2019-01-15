@@ -11,6 +11,8 @@ function tick(width, height, simTime, simSpeed, lag) {
 	PERF_START('frame');
 	PERF_START('tick');
 
+	state.game.time += simTime;
+
 	const centerX = width / 2;
 	const centerY = height / 2;
 

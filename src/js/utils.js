@@ -14,6 +14,18 @@ const ETA = Math.PI * 0.5;
 
 
 
+//////////////////
+// Math Helpers //
+//////////////////
+
+// Clamps a number between min and max values (inclusive)
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+// Linearly interpolate between numbers a and b by a specific amount.
+// mix >= 0 && mix <= 1
+const lerp = (a, b, mix) => (b - a) * mix + a;
+
+
 
 
 ////////////////////
@@ -29,12 +41,6 @@ const randomInt = (min, max) => ((Math.random() * (max - min + 1)) | 0) + min;
 // Returns a random element from an array
 const pickOne = arr => arr[Math.random() * arr.length | 0];
 
-// Clamps a number between min and max values (inclusive)
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-// Linearly interpolate between numbers a and b by a specific amount.
-// mix >= 0 && mix <= 1
-const lerp = (a, b, mix) => (b - a) * mix + a;
 
 
 
@@ -54,13 +60,57 @@ const shadeColor = (color, lightness) => {
 		other = 255;
 		mix = lightness * 2 - 1;
 	}
-	// Inlined lerp
 	return '#' +
 		(lerp(color.r, other, mix) | 0).toString(16).padStart(2, '0') +
 		(lerp(color.g, other, mix) | 0).toString(16).padStart(2, '0') +
 		(lerp(color.b, other, mix) | 0).toString(16).padStart(2, '0');
 };
 
+
+
+////////////////////
+// Timing Helpers //
+////////////////////
+
+const makeCooldown = (timePerUnit, options={}) => {
+	const { numUnits=1 } = options;
+
+	let timeRemaining = 0;
+	let lastTime = 0;
+
+	const updateTime = () => {
+		const now = state.game.time;
+		if (now < lastTime) {
+			timeRemaining = 0;
+		} else {
+			// update...
+			timeRemaining -= now-lastTime;
+			if (timeRemaining < 0) timeRemaining = 0;
+		}
+		lastTime = now;
+	};
+
+	const canUse = () => {
+		updateTime();
+		return timeRemaining <= (timePerUnit * (numUnits-1));
+	};
+
+	return {
+		canUse,
+		useIfAble() {
+			const usable = canUse();
+			if (usable) timeRemaining += timePerUnit;
+			return usable;
+		}
+	};
+};
+
+const makeSpawnerWithCooldown = (chance, timePerUnit, cooldownOptions) => {
+	const cooldown = makeCooldown(timePerUnit, cooldownOptions);
+	return function shouldSpawn() {
+		return Math.random() <= chance && cooldown.useIfAble();
+	}
+};
 
 
 
