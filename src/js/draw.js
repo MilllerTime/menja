@@ -7,53 +7,72 @@ function draw(ctx, width, height, viewScale) {
 
 	// 3D Polys
 	// ---------------
+	ctx.lineJoin = 'bevel';
 
 	PERF_START('drawShadows');
 	ctx.fillStyle = shadowColor;
+	ctx.strokeStyle = shadowColor;
 	allShadowPolys.forEach(p => {
-		if (p.normalWorld.z < 0) return;
-		ctx.beginPath();
-		const { vertices } = p;
-		const vCount = vertices.length;
-		const firstV = vertices[0];
-		ctx.moveTo(firstV.x, firstV.y);
-		for (let i=1; i<vCount; i++) {
-			const v = vertices[i];
-			ctx.lineTo(v.x, v.y);
+		if (p.wireframe) {
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			const { vertices } = p;
+			const vCount = vertices.length;
+			const firstV = vertices[0];
+			ctx.moveTo(firstV.x, firstV.y);
+			for (let i=1; i<vCount; i++) {
+				const v = vertices[i];
+				ctx.lineTo(v.x, v.y);
+			}
+			ctx.closePath();
+			ctx.stroke();
+		} else {
+			ctx.beginPath();
+			const { vertices } = p;
+			const vCount = vertices.length;
+			const firstV = vertices[0];
+			ctx.moveTo(firstV.x, firstV.y);
+			for (let i=1; i<vCount; i++) {
+				const v = vertices[i];
+				ctx.lineTo(v.x, v.y);
+			}
+			ctx.closePath();
+			ctx.fill();
 		}
-		ctx.closePath();
-		ctx.fill();
 	});
 	PERF_END('drawShadows');
 
 	PERF_START('drawPolys');
 
-	ctx.lineJoin = 'bevel';
 	allPolys.forEach(p => {
-		if (p.normalCamera.z < 0) return;
+		if (!p.wireframe && p.normalCamera.z < 0) return;
 
 		if (p.strokeWidth !== 0) {
-			ctx.lineWidth = p.strokeWidth;
+			ctx.lineWidth = p.normalCamera.z < 0 ? p.strokeWidth / 3 : p.strokeWidth;
+			if (!p.strokeColor) debugger;
 			ctx.strokeStyle = p.strokeColor;
 		}
 
 		const { vertices } = p;
 		const lastV = vertices[vertices.length - 1];
-		const normalLight = p.normalWorld.y * 0.5 + p.normalWorld.z * -0.5;
 
-		const lightness = normalLight > 0
-			? 0.1
-			: ((normalLight ** 32 - normalLight) / 2) * 0.9 + 0.1;
-
-		ctx.fillStyle = shadeColor(p.color, lightness);
+		if (!p.wireframe) {
+			const normalLight = p.normalWorld.y * 0.5 + p.normalWorld.z * -0.5;
+			const lightness = normalLight > 0
+				? 0.1
+				: ((normalLight ** 32 - normalLight) / 2) * 0.9 + 0.1;
+			ctx.fillStyle = shadeColor(p.color, lightness);
+		}
 
 		ctx.beginPath();
 		ctx.moveTo(lastV.x, lastV.y);
 		for (let v of vertices) {
 			ctx.lineTo(v.x, v.y);
 		}
-		ctx.fill();
 
+		if (!p.wireframe) {
+			ctx.fill();
+		}
 		if (p.strokeWidth !== 0) {
 			ctx.stroke();
 		}

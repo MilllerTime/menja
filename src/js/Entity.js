@@ -1,13 +1,15 @@
 class Entity {
-	constructor({ model }) {
+	constructor({ model, color, wireframe=false }) {
 		const vertices = cloneVertices(model.vertices);
 		const shadowVertices = cloneVertices(model.vertices);
+		const colorHex = colorToHex(color);
 
 		const polys = model.polys.map(p => ({
 			vertices: p.vIndexes.map(vIndex => vertices[vIndex]),
-			color: p.color,
-			strokeWidth: 0, // Set to non-zero value to draw stroke
-			strokeColor: '#000',
+			color: color, // custom rgb color object
+			wireframe: wireframe,
+			strokeWidth: wireframe ? 2 : 0, // Set to non-zero value to draw stroke
+			strokeColor: colorHex, // must be a CSS color string
 			depth: 0,
 			middle: { x: 0, y: 0, z: 0 },
 			normalWorld: { x: 0, y: 0, z: 0 },
@@ -16,6 +18,7 @@ class Entity {
 
 		const shadowPolys = model.polys.map(p => ({
 			vertices: p.vIndexes.map(vIndex => shadowVertices[vIndex]),
+			wireframe: wireframe,
 			normalWorld: { x: 0, y: 0, z: 0 }
 		}));
 
@@ -28,6 +31,7 @@ class Entity {
 		this.reset();
 	}
 
+	// Better names: resetEntity, resetTransform, resetEntityTransform
 	reset() {
 		this.x = 0;
 		this.y = 0;

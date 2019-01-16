@@ -1,13 +1,23 @@
 // Pool target instances by color, using a Map.
 // keys are color objects, and values are arrays of targets.
+// Also pool wireframe instances separately.
 const targetPool = new Map(allColors.map(c=>([c, []])));
+const targetWireframePool = new Map(allColors.map(c=>([c, []])));
 
 
 
 const getTarget = (() => {
 
-	const shouldSpawnPink = makeSpawnerWithCooldown(0.3, 12000, { numUnits: 2 });
-	const shouldSpawnSlowmo = makeSpawnerWithCooldown(0.1, 20000, { numUnits: 1 });
+	const pinkSpawner = makeSpawner({
+		chance: 0.3,
+		cooldownPerSpawn: 12000,
+		maxSpawns: 2
+	});
+	const slowmoSpawner = makeSpawner({
+		chance: 0.5,
+		cooldownPerSpawn: 10000,
+		maxSpawns: 1
+	});
 
 	// Cached array instances, no need to allocate every time.
 	const axisOptions = [
@@ -16,18 +26,30 @@ const getTarget = (() => {
 		['z', 'x']
 	];
 
-	function getTargetOfColor(color) {
-		let target = targetPool.get(color).pop();
+	function getTargetOfStyle(color, wireframe) {
+		const pool = wireframe ? targetWireframePool : targetPool;
+		let target = pool.get(color).pop();
 		if (!target) {
 			target = new Entity({
 				model: optimizeModel(makeRecursiveCubeModel({
 					recursionLevel: 1,
 					splitFn: mengerSpongeSplit,
-					color: color,
+					color: color, // TODO: Remove
 					scale: targetRadius
-				}))
+				})),
+				color: color,
+				wireframe: wireframe
 			});
+
+			// Init any properties that will be used.
+			// These will not be automatically reset when recycled.
 			target.color = color;
+			target.wireframe = wireframe;
+			// Some properties don't have their final value yet.
+			// Initialize with any value of the right type.
+			target.hit = false;
+			target.maxHealth = 0;
+			target.health = 0;
 		}
 		return target;
 	}
@@ -36,19 +58,24 @@ const getTarget = (() => {
 		// Target Parameters
 		// --------------------------------
 		let color = pickOne([BLUE, GREEN, ORANGE]);
+		let wireframe = false;
 		let health = 1;
 		let maxHealth = 3;
 
 		// Target Parameter Overrides
 		// --------------------------------
-		if (shouldSpawnPink()) {
+		if (slowmoSpawner.shouldSpawn()) {
+			color = BLUE;
+			wireframe = true;
+		}
+		else if (pinkSpawner.shouldSpawn()) {
 			color = PINK;
 			health = 3;
 		}
 
 		// Target Creation
 		// --------------------------------
-		const target = getTargetOfColor(color);
+		const target = getTargetOfStyle(color, wireframe);
 		target.hit = false;
 		target.maxHealth = maxHealth;
 		target.health = health;
@@ -82,16 +109,22 @@ const getTarget = (() => {
 
 const updateTargetHealth = (target, healthDelta) => {
 	target.health += healthDelta;
-	const strokeWidth = target.health - 1;
-	const strokeColor = makeTargetGlueColor(target);
-	target.polys.forEach(p => {
-		p.strokeWidth = strokeWidth;
-		p.strokeColor = strokeColor;
-	});
+	// Only update stroke on non-wireframe targets.
+	// Showing "glue" is a temporary attempt to display health. For now, there's
+	// no reason to have wireframe targets with high health, so we're fine.
+	if (!target.wireframe) {
+		const strokeWidth = target.health - 1;
+		const strokeColor = makeTargetGlueColor(target);
+		for (let p of target.polys) {
+			p.strokeWidth = strokeWidth;
+			p.strokeColor = strokeColor;
+		}
+	}
 };
 
 
 const returnTarget = target => {
 	target.reset();
-	targetPool.get(target.color).push(target);
+	const pool = target.wireframe ? targetWireframePool : targetPool;
+	pool.get(target.color).push(target);
 };

@@ -2,7 +2,9 @@
 const frags = [];
 // Pool inactive fragments by color, using a Map.
 // keys are color objects, and values are arrays of fragments.
+// // Also pool wireframe instances separately.
 const fragPool = new Map(allColors.map(c=>([c, []])));
+const fragWireframePool = new Map(allColors.map(c=>([c, []])));
 
 
 const createBurst = (() => {
@@ -17,6 +19,24 @@ const createBurst = (() => {
 
 
 	const fragCount = basePositions.length;
+
+	function getFragForTarget(target) {
+		const pool = target.wireframe ? fragWireframePool : fragPool;
+		let frag = pool.get(target.color).pop();
+		if (!frag) {
+			frag = new Entity({
+				model: makeCubeModel({
+					color: target.color, // TODO: Remove
+					scale: fragRadius
+				}),
+				color: target.color,
+				wireframe: target.wireframe
+			});
+			frag.color = target.color;
+			frag.wireframe = target.wireframe;
+		}
+		return frag;
+	}
 
 	return (target, force=1) => {
 		// Calculate fragment positions, and what would have been the previous positions
@@ -62,17 +82,7 @@ const createBurst = (() => {
 			const velocity = velocities[i];
 			const normal = positionNormals[i];
 
-			let frag = fragPool.get(target.color).pop();
-
-			if (!frag) {
-				frag = new Entity({
-					model: makeCubeModel({
-						color: target.color,
-						scale: fragRadius
-					})
-				});
-				frag.color = target.color;
-			}
+			const frag = getFragForTarget(target);
 
 			frag.x = position.x;
 			frag.y = position.y;
@@ -100,5 +110,6 @@ const createBurst = (() => {
 
 const returnFrag = frag => {
 	frag.reset();
-	fragPool.get(frag.color).push(frag);
+	const pool = frag.wireframe ? fragWireframePool : fragPool;
+	pool.get(frag.color).push(frag);
 };

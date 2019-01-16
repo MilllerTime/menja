@@ -29,7 +29,25 @@ describe('utils', () => {
 		});
 	});
 
-	describe.only('makeCooldown()', () => {
+	test('colorToHex', () => {
+		expect(colorToHex({ r: 0, g: 0, b: 0 })).toBe('#000000');
+		expect(colorToHex({ r: 0x31, g: 0x4f, b: 0x6c })).toBe('#314f6c');
+	});
+
+	test('shadeColor', () => {
+		// lightness of 1 always goes to full white
+		expect(shadeColor({ r: 0, g: 0, b: 0 }, 1)).toBe('#ffffff');
+		// lightness of 0 always goes to full black
+		expect(shadeColor({ r: 127, g: 127, b: 127 }, 0)).toBe('#000000');
+		// lightness of 0.5 doesn't change color
+		expect(shadeColor({ r: 0x31, g: 0x4f, b: 0x6c }, 0.5)).toBe('#314f6c');
+		// can lighten colors
+		expect(shadeColor({ r: 0x31, g: 0x4f, b: 0x6c }, 0.75)).toBe('#98a7b5');
+		// can darken colors
+		expect(shadeColor({ r: 0x31, g: 0x4f, b: 0x6c }, 0.25)).toBe('#182736');
+	});
+
+	describe('makeCooldown()', () => {
 		const resetTime = () => state.game.time = 0;
 		const advanceTime = ms => state.game.time += ms;
 
@@ -112,7 +130,7 @@ describe('utils', () => {
 		describe('3 units', () => {
 			it('can be called 3 times in a row', () => {
 				resetTime();
-				const cooldown = makeCooldown(1000, { numUnits: 3 });
+				const cooldown = makeCooldown(1000, 3);
 
 				expect(cooldown.useIfAble()).toBe(true);
 				expect(cooldown.useIfAble()).toBe(true);
@@ -123,7 +141,7 @@ describe('utils', () => {
 
 			it('can be used again after a single unit is recharged', () => {
 				resetTime();
-				const cooldown = makeCooldown(1000, { numUnits: 3 });
+				const cooldown = makeCooldown(1000, 3);
 
 				cooldown.useIfAble();
 				cooldown.useIfAble();
@@ -139,7 +157,7 @@ describe('utils', () => {
 
 			it('can recharge all units', () => {
 				resetTime();
-				const cooldown = makeCooldown(1000, { numUnits: 3 });
+				const cooldown = makeCooldown(1000, 3);
 
 				cooldown.useIfAble();
 				cooldown.useIfAble();
@@ -159,7 +177,7 @@ describe('utils', () => {
 
 			it('resets all units with game time reset', () => {
 				resetTime();
-				const cooldown = makeCooldown(1000, { numUnits: 3 });
+				const cooldown = makeCooldown(1000, 3);
 
 				cooldown.useIfAble();
 				cooldown.useIfAble();

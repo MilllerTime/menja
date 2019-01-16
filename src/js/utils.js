@@ -48,6 +48,14 @@ const pickOne = arr => arr[Math.random() * arr.length | 0];
 // Color Helpers //
 ///////////////////
 
+// Converts an { r, g, b } color object to a 6-digit hex code.
+const colorToHex = color => {
+	return '#' +
+		(color.r | 0).toString(16).padStart(2, '0') +
+		(color.g | 0).toString(16).padStart(2, '0') +
+		(color.b | 0).toString(16).padStart(2, '0');
+};
+
 // Operates on an { r, g, b } color object.
 // Returns string hex code.
 // `lightness` must range from 0 to 1. 0 is pure black, 1 is pure white.
@@ -68,13 +76,13 @@ const shadeColor = (color, lightness) => {
 
 
 
+
+
 ////////////////////
 // Timing Helpers //
 ////////////////////
 
-const makeCooldown = (timePerUnit, options={}) => {
-	const { numUnits=1 } = options;
-
+const makeCooldown = (timePerUnit, numUnits=1) => {
 	let timeRemaining = 0;
 	let lastTime = 0;
 
@@ -105,11 +113,13 @@ const makeCooldown = (timePerUnit, options={}) => {
 	};
 };
 
-const makeSpawnerWithCooldown = (chance, timePerUnit, cooldownOptions) => {
-	const cooldown = makeCooldown(timePerUnit, cooldownOptions);
-	return function shouldSpawn() {
-		return Math.random() <= chance && cooldown.useIfAble();
-	}
+const makeSpawner = ({ chance, cooldownPerSpawn, maxSpawns }) => {
+	const cooldown = makeCooldown(cooldownPerSpawn, maxSpawns);
+	return {
+		shouldSpawn() {
+			return Math.random() <= chance && cooldown.useIfAble();
+		}
+	};
 };
 
 

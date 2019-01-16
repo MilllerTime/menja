@@ -26,11 +26,15 @@
 	// Override for `.only` variants.
 	let testOverride = null;
 
+	// Track number of tests run.
+	let runTestCount = 0;
+
 	// Run test and log output. Also handles groups.
 	function runTest(test) {
 		switch (test.type) {
 			// Single test. We can just run it.
 			case TestType:
+				runTestCount++;
 				try {
 					test.testFn();
 					console.log(
@@ -67,6 +71,8 @@
 
 	// Allow tests to be queued syncronously. They'll all run on the next event loop tick.
 	setTimeout(() => {
+		runTestCount = 0;
+		let startTime = performance.now();
 		if (testOverride) {
 			console.log(
 				'%cTest Runner: Hiding all but one test result.',
@@ -76,6 +82,8 @@
 		} else {
 			testQueue.forEach(runTest);
 		}
+		const runTime = performance.now() - startTime;
+		console.log(`Test Runner: Ran ${runTestCount} ${runTestCount === 1 ? 'test' : 'tests'} in ${runTime.toFixed(2)} ms.`);
 	});
 
 

@@ -40,8 +40,9 @@ const touchPoints = [];
 const targetRadius = 40;
 const targetHitRadius = 50;
 const makeTargetGlueColor = target => {
-	const alpha = (target.health - 1) / (target.maxHealth - 1);
-	`rgba(170,221,255,${alpha.toFixed(3)})`;
+	// const alpha = (target.health - 1) / (target.maxHealth - 1);
+	// return `rgba(170,221,255,${alpha.toFixed(3)})`;
+	return 'rgb(170,221,255)';
 };
 // Size of target fragments
 const fragRadius = targetRadius / 3;
