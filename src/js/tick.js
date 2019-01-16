@@ -242,7 +242,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 	for (let i = sparks.length - 1; i >= 0; i--) {
 		const spark = sparks[i];
 		spark.life -= simTime;
-		if (spark.life < 0) {
+		if (spark.life <= 0) {
 			sparks.splice(i, 1);
 			returnSpark(spark);
 			continue;

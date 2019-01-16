@@ -89,7 +89,14 @@ function draw(ctx, width, height, viewScale) {
 	ctx.beginPath();
 	sparks.forEach(spark => {
 		ctx.moveTo(spark.x, spark.y);
-		ctx.lineTo(spark.x - spark.xD, spark.y - spark.yD);
+		// Shrink sparks to zero length as they die.
+		// Speed up shrinking as life approaches 0 (root curve).
+		// Note that sparks already get smaller over time as their speed slows
+		// down from damping. So this is like a double scale down. To counter this
+		// a bit and keep the sparks larger for longer, we'll also increase the scale
+		// a bit after applying the root curve to the 0..1 range of the remaining life.
+		const scale = (spark.life / spark.maxLife) ** 0.4 * 1.5;
+		ctx.lineTo(spark.x - spark.xD*scale, spark.y - spark.yD*scale);
 
 	});
 	ctx.stroke();

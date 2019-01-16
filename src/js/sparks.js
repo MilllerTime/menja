@@ -10,6 +10,7 @@ function addSpark(x, y, xD, yD) {
 	spark.xD = xD;
 	spark.yD = yD;
 	spark.life = random(200, 300);
+	spark.maxLife = spark.life;
 
 	sparks.push(spark);
 
