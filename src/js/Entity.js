@@ -3,6 +3,7 @@ class Entity {
 		const vertices = cloneVertices(model.vertices);
 		const shadowVertices = cloneVertices(model.vertices);
 		const colorHex = colorToHex(color);
+		const darkColorHex = shadeColor(color, 0.4);
 
 		const polys = model.polys.map(p => ({
 			vertices: p.vIndexes.map(vIndex => vertices[vIndex]),
@@ -10,6 +11,7 @@ class Entity {
 			wireframe: wireframe,
 			strokeWidth: wireframe ? 2 : 0, // Set to non-zero value to draw stroke
 			strokeColor: colorHex, // must be a CSS color string
+			strokeColorDark: darkColorHex, // must be a CSS color string
 			depth: 0,
 			middle: { x: 0, y: 0, z: 0 },
 			normalWorld: { x: 0, y: 0, z: 0 },

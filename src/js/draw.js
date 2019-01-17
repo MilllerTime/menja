@@ -48,9 +48,8 @@ function draw(ctx, width, height, viewScale) {
 		if (!p.wireframe && p.normalCamera.z < 0) return;
 
 		if (p.strokeWidth !== 0) {
-			ctx.lineWidth = p.normalCamera.z < 0 ? p.strokeWidth / 3 : p.strokeWidth;
-			if (!p.strokeColor) debugger;
-			ctx.strokeStyle = p.strokeColor;
+			ctx.lineWidth = p.normalCamera.z < 0 ? p.strokeWidth * 0.5 : p.strokeWidth;
+			ctx.strokeStyle = p.normalCamera.z < 0 ? p.strokeColorDark : p.strokeColor;
 		}
 
 		const { vertices } = p;
@@ -94,8 +93,8 @@ function draw(ctx, width, height, viewScale) {
 		// Note that sparks already get smaller over time as their speed slows
 		// down from damping. So this is like a double scale down. To counter this
 		// a bit and keep the sparks larger for longer, we'll also increase the scale
-		// a bit after applying the root curve to the 0..1 range of the remaining life.
-		const scale = (spark.life / spark.maxLife) ** 0.4 * 1.5;
+		// a bit after applying the root curve.
+		const scale = (spark.life / spark.maxLife) ** 0.5 * 1.5;
 		ctx.lineTo(spark.x - spark.xD*scale, spark.y - spark.yD*scale);
 
 	});

@@ -8,15 +8,15 @@ const targetWireframePool = new Map(allColors.map(c=>([c, []])));
 
 const getTarget = (() => {
 
+	const slowmoSpawner = makeSpawner({
+		chance: 0.5,
+		cooldownPerSpawn: 8000,
+		maxSpawns: 2
+	});
 	const pinkSpawner = makeSpawner({
 		chance: 0.3,
 		cooldownPerSpawn: 12000,
 		maxSpawns: 2
-	});
-	const slowmoSpawner = makeSpawner({
-		chance: 0.5,
-		cooldownPerSpawn: 10000,
-		maxSpawns: 1
 	});
 
 	// Cached array instances, no need to allocate every time.
@@ -65,7 +65,7 @@ const getTarget = (() => {
 		// Target Parameter Overrides
 		// --------------------------------
 		if (slowmoSpawner.shouldSpawn()) {
-			color = BLUE;
+			// color = BLUE;
 			wireframe = true;
 		}
 		else if (pinkSpawner.shouldSpawn()) {
