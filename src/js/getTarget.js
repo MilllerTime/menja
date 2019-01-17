@@ -11,7 +11,7 @@ const getTarget = (() => {
 	const slowmoSpawner = makeSpawner({
 		chance: 0.5,
 		cooldownPerSpawn: 8000,
-		maxSpawns: 2
+		maxSpawns: 1
 	});
 	const pinkSpawner = makeSpawner({
 		chance: 0.3,
@@ -65,7 +65,7 @@ const getTarget = (() => {
 		// Target Parameter Overrides
 		// --------------------------------
 		if (slowmoSpawner.shouldSpawn()) {
-			// color = BLUE;
+			color = BLUE;
 			wireframe = true;
 		}
 		else if (pinkSpawner.shouldSpawn()) {

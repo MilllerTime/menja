@@ -6,12 +6,27 @@ const targets = [];
 const pointerDelta = { x: 0, y: 0 };
 const pointerDeltaScaled = { x: 0, y: 0 };
 
+// Temp slowmo state. Should be relocated once this stabilizes.
+const slowmoDuration = 1500;
+let slowmoExpiration = 0;
+let spawnExtra = 0;
+const spawnExtraDelay = 200;
+let targetSpeed = 1;
+
 
 function tick(width, height, simTime, simSpeed, lag) {
 	PERF_START('frame');
 	PERF_START('tick');
 
 	state.game.time += simTime;
+
+	if (state.game.time < slowmoExpiration) {
+		targetSpeed = pointerIsDown ? 0.075 : 0.3;
+	} else {
+		targetSpeed = 1;
+	}
+
+	gameSpeed += (targetSpeed - gameSpeed) / 22;
 
 	const centerX = width / 2;
 	const centerY = height / 2;
@@ -66,7 +81,12 @@ function tick(width, height, simTime, simSpeed, lag) {
 	// Spawn targets
 	spawnTime -= simTime;
 	if (spawnTime <= 0) {
-		spawnTime = spawnDelay;
+		if (spawnExtra > 0) {
+			spawnExtra--;
+			spawnTime = spawnExtraDelay;
+		} else {
+			spawnTime = spawnDelay;
+		}
 		const target = getTarget();
 		const spawnRadius = Math.min(centerX * 0.8, maxSpawnX);
 		target.x = (Math.random() * spawnRadius * 2 - spawnRadius);
@@ -157,6 +177,11 @@ function tick(width, height, simTime, simSpeed, lag) {
 						if (target.health <= 0) {
 							createBurst(target, forceMultiplier);
 							sparkBurst(hitX, hitY, 7, sparkSpeed);
+							if (target.wireframe) {
+								slowmoExpiration = state.game.time + slowmoDuration;
+								spawnTime = 0;
+								spawnExtra = 2;
+							}
 							targets.splice(i, 1);
 							returnTarget(target);
 						} else {
