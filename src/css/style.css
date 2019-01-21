@@ -3,6 +3,10 @@ body {
 	background-color: #000;
 	background-image: radial-gradient(ellipse at top, #335476 0.0%, #31506e 11.1%, #304b67 22.2%, #2f4760 33.3%, #2d4359 44.4%, #2c3f51 55.6%, #2a3a4a 66.7%, #293643 77.8%, #28323d 88.9%, #262e36 100.0%);
 	overflow: hidden;
+
+	font-family: monospace;
+	font-weight: bold;
+	color: rgba(255, 255, 255, 0.75);
 }
 
 #c {
@@ -15,10 +19,30 @@ body {
 	position: absolute;
 	top: 0.65em;
 	left: 0.65em;
-	font-family: monospace;
 	font-size: calc(14px + 2vw + 1vh);
-	font-weight: bold;
-	color: rgba(255, 255, 255, 0.75);
 	pointer-events: none;
 	user-select: none;
+}
+
+.slowmo {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	opacity: 0;
+	transition: opacity 0.4s;
+	will-change: opacity;
+}
+
+.slowmo::before {
+	content: 'SLOW-MO';
+	display: block;
+	font-size: calc(8px + 1vw + 0.5vh);
+	margin-left: 0.5em;
+	margin-bottom: 8px;
+}
+
+.slowmo__bar {
+	height: 1.5vh;
+	background-color: rgba(255, 255, 255, 0.75);
+	transform-origin: 0 0;
 }

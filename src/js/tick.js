@@ -8,9 +8,9 @@ const pointerDeltaScaled = { x: 0, y: 0 };
 
 // Temp slowmo state. Should be relocated once this stabilizes.
 const slowmoDuration = 1500;
-let slowmoExpiration = 0;
+let slowmoRemaining = 0;
 let spawnExtra = 0;
-const spawnExtraDelay = 200;
+const spawnExtraDelay = 300;
 let targetSpeed = 1;
 
 
@@ -20,13 +20,20 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 	state.game.time += simTime;
 
-	if (state.game.time < slowmoExpiration) {
+	if (slowmoRemaining > 0) {
+		slowmoRemaining -= simTime;
+		if (slowmoRemaining < 0) {
+			slowmoRemaining = 0;
+		}
 		targetSpeed = pointerIsDown ? 0.075 : 0.3;
 	} else {
 		targetSpeed = 1;
 	}
 
-	gameSpeed += (targetSpeed - gameSpeed) / 22;
+	setSlowmoStatus(slowmoRemaining / slowmoDuration);
+
+	gameSpeed += (targetSpeed - gameSpeed) / 22 * lag;
+	gameSpeed = clamp(gameSpeed, 0, 1);
 
 	const centerX = width / 2;
 	const centerY = height / 2;
@@ -178,7 +185,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 							createBurst(target, forceMultiplier);
 							sparkBurst(hitX, hitY, 7, sparkSpeed);
 							if (target.wireframe) {
-								slowmoExpiration = state.game.time + slowmoDuration;
+								slowmoRemaining = slowmoDuration;
 								spawnTime = 0;
 								spawnExtra = 2;
 							}
