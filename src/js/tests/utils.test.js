@@ -193,5 +193,48 @@ describe('utils', () => {
 				expect(cooldown.canUse()).toBe(false);
 			});
 		});
+
+		describe('config mutation', () => {
+			it('can update cooldown rate', () => {
+				resetTime();
+				const cooldown = makeCooldown(1000);
+
+				cooldown.useIfAble();
+				advanceTime(500);
+				// Should be unusable after half a second...
+				expect(cooldown.canUse()).toBe(false);
+				// ...unless the cooldown is only half a second
+				cooldown.mutate({ rechargeTime: 500 });
+				expect(cooldown.canUse()).toBe(true);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				// From here on out, recharge time should still be 500ms.
+				advanceTime(250);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(250);
+				expect(cooldown.canUse()).toBe(true);
+			});
+
+			it('can update unit count', () => {
+				resetTime();
+				const cooldown = makeCooldown(1000, 2);
+
+				cooldown.useIfAble();
+				cooldown.useIfAble();
+				// Should be unusable after two uses...
+				expect(cooldown.canUse()).toBe(false);
+				// ...unless we add a third unit
+				cooldown.mutate({ units: 3 });
+				expect(cooldown.canUse()).toBe(true);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				// Should be able to recharge all units
+				advanceTime(3000);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.useIfAble()).toBe(false);
+			});
+		});
 	});
 });

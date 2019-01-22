@@ -82,7 +82,7 @@ const shadeColor = (color, lightness) => {
 // Timing Helpers //
 ////////////////////
 
-const makeCooldown = (timePerUnit, numUnits=1) => {
+const makeCooldown = (rechargeTime, units=1) => {
 	let timeRemaining = 0;
 	let lastTime = 0;
 
@@ -100,15 +100,24 @@ const makeCooldown = (timePerUnit, numUnits=1) => {
 
 	const canUse = () => {
 		updateTime();
-		return timeRemaining <= (timePerUnit * (numUnits-1));
+		return timeRemaining <= (rechargeTime * (units-1));
 	};
 
 	return {
 		canUse,
 		useIfAble() {
 			const usable = canUse();
-			if (usable) timeRemaining += timePerUnit;
+			if (usable) timeRemaining += rechargeTime;
 			return usable;
+		},
+		mutate(options) {
+			if (options.rechargeTime) {
+				// Apply recharge time delta so change takes effect immediately.
+				timeRemaining -= rechargeTime-options.rechargeTime;
+				if (timeRemaining < 0) timeRemaining = 0;
+				rechargeTime = options.rechargeTime;
+			}
+			if (options.units) units = options.units;
 		}
 	};
 };
@@ -118,6 +127,13 @@ const makeSpawner = ({ chance, cooldownPerSpawn, maxSpawns }) => {
 	return {
 		shouldSpawn() {
 			return Math.random() <= chance && cooldown.useIfAble();
+		},
+		mutate(options) {
+			if (options.chance) chance = options.chance;
+			cooldown.mutate({
+				rechargeTime: options.cooldownPerSpawn,
+				units: options.maxSpawns
+			});
 		}
 	};
 };
