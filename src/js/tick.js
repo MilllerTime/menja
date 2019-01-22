@@ -182,6 +182,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 						updateScore(10);
 
 						if (target.health <= 0) {
+							updateCubeCount(1);
 							createBurst(target, forceMultiplier);
 							sparkBurst(hitX, hitY, 7, sparkSpeed);
 							if (target.wireframe) {

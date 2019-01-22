@@ -12,6 +12,10 @@ function updateScore(inc) {
 
 updateScore(0);
 
+function updateCubeCount(inc) {
+	state.game.cubeCount += inc;
+}
+
 
 ////////////////////
 // SLOW-MO STATUS //

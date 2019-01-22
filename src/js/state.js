@@ -7,6 +7,9 @@ const state = {
 		mode: GAME_MODE_RANKED,
 		// Run time of current game.
 		time: 0,
-		score: 0
+		// Player score.
+		score: 0,
+		// Total number of cubes smashed in game.
+		cubeCount: 0
 	}
 };
