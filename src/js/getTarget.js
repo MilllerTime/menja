@@ -10,13 +10,15 @@ const getTarget = (() => {
 
 	const slowmoSpawner = makeSpawner({
 		chance: 0.5,
-		cooldownPerSpawn: 8000,
+		cooldownPerSpawn: 10000,
 		maxSpawns: 1
 	});
-	const pinkSpawner = makeSpawner({
+
+	let doubleStrong = false;
+	const strongSpawner = makeSpawner({
 		chance: 0.3,
 		cooldownPerSpawn: 12000,
-		maxSpawns: 2
+		maxSpawns: 1
 	});
 
 	// Cached array instances, no need to allocate every time.
@@ -55,6 +57,11 @@ const getTarget = (() => {
 	}
 
 	return function getTarget() {
+		if (!doubleStrong && state.game.score > doubleStrongEnableScore) {
+			doubleStrong = true;
+			strongSpawner.mutate({ maxSpawns: 2 });
+		}
+
 		// Target Parameters
 		// --------------------------------
 		let color = pickOne([BLUE, GREEN, ORANGE]);
@@ -68,7 +75,7 @@ const getTarget = (() => {
 			color = BLUE;
 			wireframe = true;
 		}
-		else if (pinkSpawner.shouldSpawn()) {
+		else if (strongSpawner.shouldSpawn()) {
 			color = PINK;
 			health = 3;
 		}

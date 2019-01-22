@@ -11,6 +11,15 @@ const PINK =   { r: 0xfa, g: 0x24, b: 0x73 };
 const ORANGE = { r: 0xfe, g: 0x95, b: 0x22 };
 const allColors = [BLUE, GREEN, PINK, ORANGE];
 
+// Gameplay
+const getSpawnDelay = () => {
+	const spawnDelayMax = 1100;
+	const spawnDelayMin = 550;
+	const spawnDelay = spawnDelayMax - state.game.cubeCount * 2;
+	return Math.max(spawnDelay, spawnDelayMin);
+}
+const doubleStrongEnableScore = 2500;
+
 // Interaction state
 let pointerIsDown = false;
 // The last known position of the primary pointer in screen coordinates.`
@@ -57,6 +66,11 @@ const canvas = document.querySelector('#c');
 const cameraDistance = 900;
 // Does not affect perspective
 const sceneScale = 1;
+// Objects that get too close to the camera will be faded out to transparent over this range.
+// const cameraFadeStartZ = 0.8*cameraDistance - 6*targetRadius;
+const cameraFadeStartZ = 0.45*cameraDistance;
+const cameraFadeEndZ = 0.65*cameraDistance;
+const cameraFadeRange = cameraFadeEndZ - cameraFadeStartZ;
 
 // Globals used to accumlate all vertices/polygons in each frame
 const allVertices = [];

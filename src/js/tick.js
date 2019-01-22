@@ -1,6 +1,5 @@
 
 let spawnTime = 0;
-const spawnDelay = 1000;
 const maxSpawnX = 450;
 const targets = [];
 const pointerDelta = { x: 0, y: 0 };
@@ -92,7 +91,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 			spawnExtra--;
 			spawnTime = spawnExtraDelay;
 		} else {
-			spawnTime = spawnDelay;
+			spawnTime = getSpawnDelay();
 		}
 		const target = getTarget();
 		const spawnRadius = Math.min(centerX * 0.8, maxSpawnX);
@@ -213,7 +212,6 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 	// Animate fragments and remove when offscreen.
 	const fragBackboardZ = backboardZ + fragRadius;
-	const safetyGlassZ = 0.8*cameraDistance - 6*targetRadius;
 	// Allow fragments to move off-screen to sides for a while, since shadows are still visible.
 	const fragLeftBound = -width;
 	const fragRightBound = width;
@@ -237,16 +235,6 @@ function tick(width, height, simTime, simSpeed, lag) {
 			frag.z = fragBackboardZ;
 			frag.zD *= -boundDamping;
 		}
-		else if (frag.z > safetyGlassZ) {
-			frag.z = safetyGlassZ;
-			frag.zD *= -boundDamping;
-			// Useful debugging technique to highlight fragments affected by some condition.
-			// Note this only works for the first hit.
-			// These tainted fragments get recycled and will start showing up elsewhere.
-			// --------------
-			// const hitColor = { r: 0x3a, g: 0x08, b: 0x12 };
-			// frag.polys.forEach(p => p.color = hitColor);
-		}
 
 		frag.yD += gravity * simSpeed;
 		frag.rotateX += frag.rotateXD * simSpeed;
@@ -261,9 +249,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 			frag.projected.y > centerY + targetHitRadius ||
 			// Sides of screen
 			frag.projected.x < fragLeftBound ||
-			frag.projected.x > fragRightBound
-			// Too close to camera (based on a percentage and constant value)
-			// frag.projected.z > 0.8*cameraDistance - 6*targetRadius
+			frag.projected.x > fragRightBound ||
+			// Too close to camera
+			frag.z > cameraFadeEndZ
 		) {
 			frags.splice(i, 1);
 			returnFrag(frag);

@@ -54,6 +54,7 @@ function draw(ctx, width, height, viewScale) {
 
 		const { vertices } = p;
 		const lastV = vertices[vertices.length - 1];
+		const fadeOut = p.middle.z > cameraFadeStartZ;
 
 		if (!p.wireframe) {
 			const normalLight = p.normalWorld.y * 0.5 + p.normalWorld.z * -0.5;
@@ -61,6 +62,13 @@ function draw(ctx, width, height, viewScale) {
 				? 0.1
 				: ((normalLight ** 32 - normalLight) / 2) * 0.9 + 0.1;
 			ctx.fillStyle = shadeColor(p.color, lightness);
+		}
+
+		// Fade out polys close to camera. `globalAlpha` must be reset later.
+		if (fadeOut) {
+			// If polygon gets really close to camera (outside `cameraFadeRange`) the alpha
+			// can go negative, which has the appearance of alpha = 1. So, we'll clamp it at 0.
+			ctx.globalAlpha = Math.max(0, 1 - (p.middle.z - cameraFadeStartZ) / cameraFadeRange);
 		}
 
 		ctx.beginPath();
@@ -74,6 +82,10 @@ function draw(ctx, width, height, viewScale) {
 		}
 		if (p.strokeWidth !== 0) {
 			ctx.stroke();
+		}
+
+		if (fadeOut) {
+			ctx.globalAlpha = 1;
 		}
 	});
 	PERF_END('drawPolys');
