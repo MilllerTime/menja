@@ -28,6 +28,7 @@ body {
 	position: fixed;
 	bottom: 0;
 	width: 100%;
+	pointer-events: none;
 	opacity: 0;
 	transition: opacity 0.4s;
 	will-change: opacity;
