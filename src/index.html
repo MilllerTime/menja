@@ -11,10 +11,36 @@
 	<!-- endbuild -->
 </head>
 <body>
-	<!-- Game canvas	 -->
+	<!-- Game canvas -->
 	<canvas id="c"></canvas>
-	<div class="slowmo">
-		<div class="slowmo__bar"></div>
+
+	<!-- Gameplay HUD -->
+	<div class="hud">
+		<div class="score-lbl"></div>
+		<div class="slowmo">
+			<div class="slowmo__bar"></div>
+		</div>
+	</div>
+
+	<!-- Menu System -->
+	<div class="menus">
+		<div class="menu menu--main">
+			<h1>MENJA!</h1>
+			<button type="button" class="play-normal-btn">PLAY GAME</button>
+			<button type="button" class="play-casual-btn">CASUAL MODE</button>
+		</div>
+		<div class="menu menu--pause">
+			<h1>Paused</h1>
+			<button type="button" class="resume-btn">RESUME GAME</button>
+			<button type="button" class="menu-btn">MAIN MENU</button>
+		</div>
+		<div class="menu menu--score">
+			<h1>Game Over</h1>
+			<h2>Score:</h2>
+			<div class="final-score-lbl"></div>
+			<button type="button" class="play-again-btn">PLAY AGAIN</button>
+			<button type="button" class="menu-btn">MAIN MENU</button>
+		</div>
 	</div>
 
 	<!-- build:remove -->
@@ -32,6 +58,7 @@
 	<script src="js/createBurst.js"></script>
 	<script src="js/sparks.js"></script>
 	<script src="js/hud.js"></script>
+	<script src="js/menus.js"></script>
 	<script src="js/tick.js"></script>
 	<script src="js/draw.js"></script>
 	<script src="js/canvas.js"></script>

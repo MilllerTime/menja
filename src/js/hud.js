@@ -1,9 +1,7 @@
 ///////////
 // SCORE //
 ///////////
-const scoreNode = document.createElement('div');
-scoreNode.classList.add('score-lbl');
-document.body.appendChild(scoreNode);
+const scoreNode = $('.score-lbl');
 
 function updateScore(inc) {
 	state.game.score += inc;
@@ -21,8 +19,8 @@ function updateCubeCount(inc) {
 // SLOW-MO STATUS //
 ////////////////////
 
-const slowmoNode = document.querySelector('.slowmo');
-const slowmoBarNode = document.querySelector('.slowmo__bar');
+const slowmoNode = $('.slowmo');
+const slowmoBarNode = $('.slowmo__bar');
 
 function setSlowmoStatus(percentRemaining) {
 	slowmoNode.style.opacity = percentRemaining === 0 ? 0 : 1;

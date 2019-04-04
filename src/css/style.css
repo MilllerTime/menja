@@ -2,10 +2,12 @@ body {
 	margin: 0;
 	background-color: #000;
 	background-image: radial-gradient(ellipse at top, #335476 0.0%, #31506e 11.1%, #304b67 22.2%, #2f4760 33.3%, #2d4359 44.4%, #2c3f51 55.6%, #2a3a4a 66.7%, #293643 77.8%, #28323d 88.9%, #262e36 100.0%);
+	height: 100vh;
 	overflow: hidden;
 
 	font-family: monospace;
 	font-weight: bold;
+	letter-spacing: 0.06em;
 	color: rgba(255, 255, 255, 0.75);
 }
 
@@ -15,8 +17,17 @@ body {
 	transform: translateZ(0);
 }
 
+
+/*/////////////////////
+//        HUD        //
+/////////////////////*/
+
+.hud {
+	display: none;
+}
+
 .score-lbl {
-	position: absolute;
+	position: fixed;
 	top: 0.65em;
 	left: 0.65em;
 	font-size: calc(14px + 2vw + 1vh);
@@ -57,4 +68,86 @@ body {
 	height: 1.5vh;
 	background-color: rgba(255, 255, 255, 0.75);
 	transform-origin: 0 0;
+}
+
+
+
+/*/////////////////////
+//       MENUS       //
+/////////////////////*/
+
+/* Menu containers */
+.menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	user-select: none;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(30px);
+	transition-property: opacity, visibility, transform;
+	transition-duration: 0.2s;
+}
+
+.menu.active {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+	transition-duration: 0.4s;
+}
+
+/* Common menu elements */
+
+h1 {
+	font-size: 4rem;
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
+button {
+	display: block;
+	position: relative;
+	width: 200px;
+	padding: 12px 20px;
+	background: transparent;
+	border: none;
+	outline: none;
+	user-select: none;
+	font-family: monospace;
+	font-weight: bold;
+	font-size: 1.4rem;
+	color: #fff;
+	opacity: 0.75;
+	transition: opacity 0.3s;
+}
+
+button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(255, 255, 255, 0.15);
+	transform: scale(0, 0);
+	opacity: 0;
+	transition: opacity 0.3s, transform 0.3s;
+}
+
+/* No `:focus` styles because this is a mouse/touch game! */
+button:hover,
+button:active {
+	opacity: 1;
+}
+
+button:hover::before,
+button:active::before {
+	transform: scale(1, 1);
+	opacity: 1;
 }

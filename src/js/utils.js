@@ -3,6 +3,8 @@ const invariant = (condition, message) => {
 	if (!condition) throw new Error(message);
 };
 
+const $ = selector => document.querySelector(selector);
+
 
 ////////////////////
 // Math Constants //
@@ -255,7 +257,10 @@ function computePolyNormal(poly, normalName) {
 	polyNormal.z = nz / mag;
 }
 
-// Apply translation/rotation to all vertices in scene.
+// Apply translation/rotation/scale to all given vertices.
+// If `vertices` and `target` are the same array, the vertices will be mutated in place.
+// If `vertices` and `target` are different arrays, `vertices` will not be touched, instead the
+// transformed values from `vertices` will be written to `target` array.
 function transformVertices(vertices, target, tX, tY, tZ, rX, rY, rZ, sX, sY, sZ) {
 	// Matrix multiplcation constants only need calculated once for all vertices.
 	const sinX = Math.sin(rX);
