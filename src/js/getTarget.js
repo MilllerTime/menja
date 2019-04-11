@@ -1,3 +1,6 @@
+// All active targets
+const targets = [];
+
 // Pool target instances by color, using a Map.
 // keys are color objects, and values are arrays of targets.
 // Also pool wireframe instances separately.
@@ -135,3 +138,10 @@ const returnTarget = target => {
 	const pool = target.wireframe ? targetWireframePool : targetPool;
 	pool.get(target.color).push(target);
 };
+
+
+function resetAllTargets() {
+	while(targets.length) {
+		returnTarget(targets.pop());
+	}
+}

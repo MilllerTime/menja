@@ -1,7 +1,6 @@
 
 let spawnTime = 0;
 const maxSpawnX = 450;
-const targets = [];
 const pointerDelta = { x: 0, y: 0 };
 const pointerDeltaScaled = { x: 0, y: 0 };
 
@@ -29,7 +28,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 		targetSpeed = 1;
 	}
 
-	setSlowmoStatus(slowmoRemaining / slowmoDuration);
+	renderSlowmoStatus(slowmoRemaining / slowmoDuration);
 
 	gameSpeed += (targetSpeed - gameSpeed) / 22 * lag;
 	gameSpeed = clamp(gameSpeed, 0, 1);
@@ -144,7 +143,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 		if (target.projected.y > centerY + targetHitRadius * 2) {
 			targets.splice(i, 1);
 			returnTarget(target);
-			updateScore(-50);
+			incrementScore(-50);
 			continue;
 		}
 
@@ -178,10 +177,10 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 					if (pointerSpeedScaled > minPointerSpeed) {
 						target.health--;
-						updateScore(10);
+						incrementScore(10);
 
 						if (target.health <= 0) {
-							updateCubeCount(1);
+							incrementCubeCount(1);
 							createBurst(target, forceMultiplier);
 							sparkBurst(hitX, hitY, 7, sparkSpeed);
 							if (target.wireframe) {

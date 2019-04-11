@@ -13,10 +13,6 @@ const mainMenuBtnNode = $('.menu-btn');
 // Score Menu
 
 
-function setActiveMenu(menu) {
-	state.menus.active = menu;
-}
-
 function showMenu(node) {
 	node.classList.add('active');
 }
@@ -41,6 +37,12 @@ function renderMenus() {
 			showMenu(menuScoreNode);
 			break;
 	}
+
+	if (state.menus.active) {
+		hideHud();
+	} else {
+		showHud();
+	}
 }
 
 renderMenus();
@@ -48,11 +50,10 @@ renderMenus();
 
 
 playNormalBtnNode.addEventListener('click', () => {
-	setActiveMenu(MENU_PAUSE);
-	renderMenus();
+	resetGame();
+	setActiveMenu(null);
 });
 
 mainMenuBtnNode.addEventListener('click', () => {
 	setActiveMenu(MENU_MAIN);
-	renderMenus();
 });

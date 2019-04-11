@@ -1,18 +1,24 @@
+const hudContainerNode = $('.hud');
+
+function showHud() {
+	hudContainerNode.style.display = 'block';
+}
+
+function hideHud() {
+	hudContainerNode.style.display = 'none';
+}
+
+
 ///////////
 // SCORE //
 ///////////
 const scoreNode = $('.score-lbl');
 
-function updateScore(inc) {
-	state.game.score += inc;
+function renderScoreHud() {
 	scoreNode.innerText = `SCORE: ${state.game.score}`;
 }
 
-updateScore(0);
-
-function updateCubeCount(inc) {
-	state.game.cubeCount += inc;
-}
+renderScoreHud();
 
 
 ////////////////////
@@ -22,7 +28,7 @@ function updateCubeCount(inc) {
 const slowmoNode = $('.slowmo');
 const slowmoBarNode = $('.slowmo__bar');
 
-function setSlowmoStatus(percentRemaining) {
+function renderSlowmoStatus(percentRemaining) {
 	slowmoNode.style.opacity = percentRemaining === 0 ? 0 : 1;
 	slowmoBarNode.style.transform = `scaleX(${percentRemaining.toFixed(3)})`;
 }

@@ -22,9 +22,6 @@ body {
 //        HUD        //
 /////////////////////*/
 
-.hud {
-	display: none;
-}
 
 .score-lbl {
 	position: fixed;
@@ -141,13 +138,23 @@ button::before {
 }
 
 /* No `:focus` styles because this is a mouse/touch game! */
-button:hover,
 button:active {
 	opacity: 1;
 }
 
-button:hover::before,
 button:active::before {
 	transform: scale(1, 1);
 	opacity: 1;
+}
+
+/* Only enable hover state on large screens */
+@media (min-width: 1025px) {
+	button:hover {
+		opacity: 1;
+	}
+
+	button:hover::before {
+		transform: scale(1, 1);
+		opacity: 1;
+	}
 }
