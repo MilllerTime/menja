@@ -10,7 +10,7 @@ function hideHud() {
 
 
 ///////////
-// SCORE //
+// Score //
 ///////////
 const scoreNode = $('.score-lbl');
 
@@ -21,8 +21,15 @@ function renderScoreHud() {
 renderScoreHud();
 
 
+//////////////////
+// Pause Button //
+//////////////////
+
+handleClick($('.pause-btn'), () => pauseGame());
+
+
 ////////////////////
-// SLOW-MO STATUS //
+// Slow-Mo Status //
 ////////////////////
 
 const slowmoNode = $('.slowmo');

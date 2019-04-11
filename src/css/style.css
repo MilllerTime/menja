@@ -23,13 +23,39 @@ body {
 /////////////////////*/
 
 
-.score-lbl {
+.score-lbl,
+.pause-btn {
 	position: fixed;
+	font-size: calc(14px + 2vw + 1vh);
+}
+
+.score-lbl {
 	top: 0.65em;
 	left: 0.65em;
-	font-size: calc(14px + 2vw + 1vh);
 	pointer-events: none;
 	user-select: none;
+}
+
+.pause-btn {
+	position: fixed;
+	top: 0.8em;
+	right: 0.65em;
+	width: 0.8em;
+	height: 0.8em;
+	opacity: 0.75;
+}
+
+.pause-btn::before,
+.pause-btn::after {
+	content: '';
+	width: 34%;
+	height: 100%;
+	position: absolute;
+	background-color: #fff;
+}
+
+.pause-btn::after {
+	right: 0;
 }
 
 .slowmo {
@@ -105,6 +131,18 @@ h1 {
 	font-size: 4rem;
 	margin-top: 0;
 	margin-bottom: 1em;
+}
+
+h2 {
+	font-size: 2rem;
+	margin-top: -1em;
+	margin-bottom: 1em;
+}
+
+.final-score-lbl {
+	font-size: 5rem;
+	margin-top: -0.4em;
+	margin-bottom: 0.5em;
 }
 
 button {

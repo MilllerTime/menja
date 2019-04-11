@@ -13,6 +13,8 @@ let targetSpeed = 1;
 
 
 function tick(width, height, simTime, simSpeed, lag) {
+	if (isPaused()) return;
+
 	PERF_START('frame');
 	PERF_START('tick');
 
@@ -143,7 +145,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 		if (target.projected.y > centerY + targetHitRadius * 2) {
 			targets.splice(i, 1);
 			returnTarget(target);
-			incrementScore(-50);
+			if (isInGame() && state.game.mode === GAME_MODE_RANKED) {
+				setActiveMenu(MENU_SCORE);
+			}
 			continue;
 		}
 

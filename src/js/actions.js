@@ -40,3 +40,24 @@ function resetGame() {
 	setScore(0);
 	setCubeCount(0);
 }
+
+function pauseGame() {
+	isInGame() && setActiveMenu(MENU_PAUSE);
+}
+
+function resumeGame() {
+	isPaused() && setActiveMenu(null);
+}
+
+
+
+
+////////////////////////
+// KEYBOARD SHORTCUTS //
+////////////////////////
+
+window.addEventListener('keydown', event => {
+	if (event.key === 'p') {
+		isPaused() ? resumeGame() : pauseGame();
+	}
+});

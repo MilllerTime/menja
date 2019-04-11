@@ -3,14 +3,8 @@ const menuMainNode = $('.menu--main');
 const menuPauseNode = $('.menu--pause');
 const menuScoreNode = $('.menu--score');
 
-// Buttons from various menus
-// Main Menu
-const playNormalBtnNode = $('.play-normal-btn');
-const playCasualBtnNode = $('.play-casual-btn');
-// Pause Menu
-const resumeBtnNode = $('.resume-btn');
-const mainMenuBtnNode = $('.menu-btn');
-// Score Menu
+const finalScoreLblNode = $('.final-score-lbl');
+
 
 
 function showMenu(node) {
@@ -34,6 +28,7 @@ function renderMenus() {
 			showMenu(menuPauseNode);
 			break;
 		case MENU_SCORE:
+			finalScoreLblNode.textContent = state.game.score;
 			showMenu(menuScoreNode);
 			break;
 	}
@@ -49,11 +44,35 @@ renderMenus();
 
 
 
-playNormalBtnNode.addEventListener('click', () => {
+////////////////////
+// Button Actions //
+////////////////////
+
+// Main Menu
+handleClick($('.play-normal-btn'), () => {
 	resetGame();
 	setActiveMenu(null);
 });
 
-mainMenuBtnNode.addEventListener('click', () => {
+handleClick($('.play-casual-btn'), () => {
+
+});
+
+// Pause Menu
+handleClick($('.resume-btn'), () => {
+	resumeGame();
+});
+
+handleClick($('.menu-btn--pause'), () => {
+	setActiveMenu(MENU_MAIN);
+});
+
+
+handleClick($('.play-again-btn'), () => {
+	resetGame();
+	setActiveMenu(null);
+});
+
+handleClick($('.menu-btn--score'), () => {
 	setActiveMenu(MENU_MAIN);
 });

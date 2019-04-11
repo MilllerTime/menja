@@ -32,3 +32,11 @@ const state = {
 		active: MENU_MAIN
 	}
 };
+
+
+////////////////////////////
+// Global State Selectors //
+////////////////////////////
+
+const isInGame = () => !state.menus.active;
+const isPaused = () => state.menus.active === MENU_PAUSE;

@@ -3,7 +3,13 @@ const invariant = (condition, message) => {
 	if (!condition) throw new Error(message);
 };
 
+
+/////////
+// DOM //
+/////////
+
 const $ = selector => document.querySelector(selector);
+const handleClick = (element, handler) => element.addEventListener('click', handler);
 
 
 ////////////////////
