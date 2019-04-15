@@ -24,6 +24,12 @@ const getTarget = (() => {
 		maxSpawns: 1
 	});
 
+	const spinnerSpawner = makeSpawner({
+		chance: 0.1,
+		cooldownPerSpawn: 10000,
+		maxSpawns: 1
+	});
+
 	// Cached array instances, no need to allocate every time.
 	const axisOptions = [
 		['x', 'y'],
@@ -71,6 +77,7 @@ const getTarget = (() => {
 		let wireframe = false;
 		let health = 1;
 		let maxHealth = 3;
+		const spinner = spinnerSpawner.shouldSpawn();
 
 		// Target Parameter Overrides
 		// --------------------------------
@@ -95,6 +102,13 @@ const getTarget = (() => {
 			Math.random() * 0.1 - 0.05,
 			Math.random() * 0.1 - 0.05
 		];
+
+		if (spinner) {
+			// Ends up spinning a random axis
+			spinSpeeds[0] = -0.25;
+			spinSpeeds[1] = 0;
+			target.rotateZ = random(0, TAU);
+		}
 
 		const axes = pickOne(axisOptions);
 

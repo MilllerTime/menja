@@ -1,11 +1,11 @@
 const hudContainerNode = $('.hud');
 
-function showHud() {
-	hudContainerNode.style.display = 'block';
-}
-
-function hideHud() {
-	hudContainerNode.style.display = 'none';
+function setHudVisibility(visible) {
+	if (visible) {
+		hudContainerNode.style.display = 'block';
+	} else {
+		hudContainerNode.style.display = 'none';
+	}
 }
 
 
@@ -15,7 +15,12 @@ function hideHud() {
 const scoreNode = $('.score-lbl');
 
 function renderScoreHud() {
-	scoreNode.innerText = `SCORE: ${state.game.score}`;
+	if (isCasualGame()) {
+		scoreNode.style.display = 'none';
+	} else {
+		scoreNode.innerText = `SCORE: ${state.game.score}`;
+		scoreNode.style.display = 'block';
+	}
 }
 
 renderScoreHud();
@@ -25,7 +30,7 @@ renderScoreHud();
 // Pause Button //
 //////////////////
 
-handleClick($('.pause-btn'), () => pauseGame());
+handlePointerDown($('.pause-btn'), () => pauseGame());
 
 
 ////////////////////

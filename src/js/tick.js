@@ -145,8 +145,12 @@ function tick(width, height, simTime, simSpeed, lag) {
 		if (target.projected.y > centerY + targetHitRadius * 2) {
 			targets.splice(i, 1);
 			returnTarget(target);
-			if (isInGame() && state.game.mode === GAME_MODE_RANKED) {
-				setActiveMenu(MENU_SCORE);
+			if (isInGame()) {
+				if (isCasualGame()) {
+					incrementScore(-25);
+				} else {
+					setActiveMenu(MENU_SCORE);
+				}
 			}
 			continue;
 		}

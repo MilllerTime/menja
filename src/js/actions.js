@@ -19,6 +19,9 @@ function setScore(score) {
 
 function incrementScore(inc) {
 	state.game.score += inc;
+	if (state.game.score < 0) {
+		state.game.score = 0;
+	}
 	renderScoreHud();
 }
 
@@ -34,6 +37,10 @@ function incrementCubeCount(inc) {
 //////////////////
 // GAME ACTIONS //
 //////////////////
+
+function setGameMode(mode) {
+	state.game.mode = mode;
+}
 
 function resetGame() {
 	resetAllTargets();

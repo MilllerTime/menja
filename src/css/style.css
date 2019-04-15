@@ -38,23 +38,29 @@ body {
 
 .pause-btn {
 	position: fixed;
-	top: 0.8em;
-	right: 0.65em;
+	top: 0;
+	right: 0;
+	padding: 0.8em 0.65em;
+}
+
+.pause-btn > div {
+	position: relative;
 	width: 0.8em;
 	height: 0.8em;
 	opacity: 0.75;
 }
 
-.pause-btn::before,
-.pause-btn::after {
+.pause-btn > div::before,
+.pause-btn > div::after {
 	content: '';
+	display: block;
 	width: 34%;
 	height: 100%;
 	position: absolute;
 	background-color: #fff;
 }
 
-.pause-btn::after {
+.pause-btn > div::after {
 	right: 0;
 }
 
@@ -99,23 +105,45 @@ body {
 //       MENUS       //
 /////////////////////*/
 
-/* Menu containers */
-.menu {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+.menus::before {
+	content: '';
+	pointer-events: none;
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
+	background-color: #000;
+	opacity: 0;
+	transition: opacity 0.2s;
+	transition-timing-function: ease-in;
+}
+
+.menus.has-active::before {
+	opacity: 0.08;
+	transition-duration: 0.4s;
+	transition-timing-function: ease-out;
+}
+
+/* Menu containers */
+.menu {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	user-select: none;
+	color: rgba(255, 255, 255, 0.9);
 	opacity: 0;
 	visibility: hidden;
 	transform: translateY(30px);
 	transition-property: opacity, visibility, transform;
 	transition-duration: 0.2s;
+	transition-timing-function: ease-in;
 }
 
 .menu.active {
@@ -123,26 +151,30 @@ body {
 	visibility: visible;
 	transform: translateY(0);
 	transition-duration: 0.4s;
+	transition-timing-function: ease-out;
 }
 
 /* Common menu elements */
 
 h1 {
 	font-size: 4rem;
-	margin-top: 0;
-	margin-bottom: 1em;
+	line-height: 0.95;
+	text-align: center;
+	font-weight: bold;
+	margin: 0 0.65em 1em;
 }
 
 h2 {
 	font-size: 2rem;
-	margin-top: -1em;
-	margin-bottom: 1em;
+	line-height: 1;
+	text-align: center;
+	font-weight: bold;
+	margin: -1em 0.65em 1em;
 }
 
 .final-score-lbl {
 	font-size: 5rem;
-	margin-top: -0.4em;
-	margin-bottom: 0.5em;
+	margin: -0.4em 0 0.5em;
 }
 
 button {

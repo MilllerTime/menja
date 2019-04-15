@@ -1,4 +1,5 @@
 // Top-level menu containers
+const menuContainerNode = $('.menus');
 const menuMainNode = $('.menu--main');
 const menuPauseNode = $('.menu--pause');
 const menuScoreNode = $('.menu--score');
@@ -33,11 +34,8 @@ function renderMenus() {
 			break;
 	}
 
-	if (state.menus.active) {
-		hideHud();
-	} else {
-		showHud();
-	}
+	setHudVisibility(!state.menus.active);
+	menuContainerNode.classList.toggle('has-active', state.menus.active);
 }
 
 renderMenus();
@@ -50,29 +48,25 @@ renderMenus();
 
 // Main Menu
 handleClick($('.play-normal-btn'), () => {
+	setGameMode(GAME_MODE_RANKED);
 	resetGame();
 	setActiveMenu(null);
 });
 
 handleClick($('.play-casual-btn'), () => {
-
+	setGameMode(GAME_MODE_CASUAL);
+	resetGame();
+	setActiveMenu(null);
 });
 
 // Pause Menu
-handleClick($('.resume-btn'), () => {
-	resumeGame();
-});
+handleClick($('.resume-btn'), () => resumeGame());
+handleClick($('.menu-btn--pause'), () => setActiveMenu(MENU_MAIN));
 
-handleClick($('.menu-btn--pause'), () => {
-	setActiveMenu(MENU_MAIN);
-});
-
-
+// Score Menu
 handleClick($('.play-again-btn'), () => {
 	resetGame();
 	setActiveMenu(null);
 });
 
-handleClick($('.menu-btn--score'), () => {
-	setActiveMenu(MENU_MAIN);
-});
+handleClick($('.menu-btn--score'), () => setActiveMenu(MENU_MAIN));

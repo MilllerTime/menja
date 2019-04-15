@@ -10,6 +10,10 @@ const invariant = (condition, message) => {
 
 const $ = selector => document.querySelector(selector);
 const handleClick = (element, handler) => element.addEventListener('click', handler);
+const handlePointerDown = (element, handler) => {
+	element.addEventListener('touchstart', handler);
+	element.addEventListener('mousedown', handler);
+};
 
 
 ////////////////////

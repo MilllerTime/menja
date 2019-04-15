@@ -1,6 +1,7 @@
 // Interaction
 // -----------------------------
-function handlePointerDown(x, y) {
+
+function handleCanvasPointerDown(x, y) {
 	if (!pointerIsDown) {
 		pointerIsDown = true;
 		pointerScreen.x = x;
@@ -8,7 +9,7 @@ function handlePointerDown(x, y) {
 	}
 }
 
-function handlePointerUp() {
+function handleCanvasPointerUp() {
 	pointerIsDown = false;
 	touchPoints.push({
 		touchBreak: true,
@@ -16,7 +17,7 @@ function handlePointerUp() {
 	});
 }
 
-function handlePointerMove(x, y) {
+function handleCanvasPointerMove(x, y) {
 	if (pointerIsDown) {
 		pointerScreen.x = x;
 		pointerScreen.y = y;
@@ -27,33 +28,33 @@ function handlePointerMove(x, y) {
 // Use pointer events if available, otherwise fallback to touch events (for iOS).
 if ('PointerEvent' in window) {
 	canvas.addEventListener('pointerdown', event => {
-		event.isPrimary && handlePointerDown(event.clientX, event.clientY);
+		event.isPrimary && handleCanvasPointerDown(event.clientX, event.clientY);
 	});
 
 	canvas.addEventListener('pointerup', event => {
-		event.isPrimary && handlePointerUp();
+		event.isPrimary && handleCanvasPointerUp();
 	});
 
 	canvas.addEventListener('pointermove', event => {
-		event.isPrimary && handlePointerMove(event.clientX, event.clientY);
+		event.isPrimary && handleCanvasPointerMove(event.clientX, event.clientY);
 	});
 
 	// We also need to know if the mouse leaves the page. For this game, it's best if that
 	// cancels a swipe, so essentially acts as a "mouseup" event.
-	document.addEventListener('mouseout', handlePointerUp);
+	document.addEventListener('mouseout', handleCanvasPointerUp);
 } else {
 	let activeTouchId = null;
 	canvas.addEventListener('touchstart', event => {
 		if (!pointerIsDown) {
 			const touch = event.changedTouches[0];
 			activeTouchId = touch.identifier;
-			handlePointerDown(touch.clientX, touch.clientY);
+			handleCanvasPointerDown(touch.clientX, touch.clientY);
 		}
 	});
 	canvas.addEventListener('touchend', event => {
 		for (let touch of event.changedTouches) {
 			if (touch.identifier === activeTouchId) {
-				handlePointerUp();
+				handleCanvasPointerUp();
 				break;
 			}
 		}
@@ -61,7 +62,7 @@ if ('PointerEvent' in window) {
 	canvas.addEventListener('touchmove', event => {
 		for (let touch of event.changedTouches) {
 			if (touch.identifier === activeTouchId) {
-				handlePointerMove(touch.clientX, touch.clientY);
+				handleCanvasPointerMove(touch.clientX, touch.clientY);
 				event.preventDefault();
 				break;
 			}
