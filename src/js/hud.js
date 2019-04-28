@@ -13,14 +13,18 @@ function setHudVisibility(visible) {
 // Score //
 ///////////
 const scoreNode = $('.score-lbl');
+const cubeCountNode = $('.cube-count-lbl');
 
 function renderScoreHud() {
 	if (isCasualGame()) {
 		scoreNode.style.display = 'none';
+		cubeCountNode.style.opacity = 1;
 	} else {
 		scoreNode.innerText = `SCORE: ${state.game.score}`;
 		scoreNode.style.display = 'block';
+		cubeCountNode.style.opacity = 0.65 ;
 	}
+	cubeCountNode.innerText = `CUBES SMASHED: ${state.game.cubeCount}`;
 }
 
 renderScoreHud();

@@ -41,3 +41,15 @@ const state = {
 const isInGame = () => !state.menus.active;
 const isCasualGame = () => state.game.mode === GAME_MODE_CASUAL;
 const isPaused = () => state.menus.active === MENU_PAUSE;
+
+
+///////////////////
+// Local Storage //
+///////////////////
+
+const highScoreKey = '__menja__highScore';
+const getHighScore = () => {
+	const raw = localStorage.getItem(highScoreKey);
+	return raw ? parseInt(raw, 10) : 0;
+};
+const setHighScore = score => localStorage.setItem(highScoreKey, String(score))

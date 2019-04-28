@@ -94,12 +94,17 @@ const shadeColor = (color, lightness) => {
 // Timing Helpers //
 ////////////////////
 
+const _allCooldowns = [];
+
 const makeCooldown = (rechargeTime, units=1) => {
 	let timeRemaining = 0;
 	let lastTime = 0;
 
+	const initialOptions = { rechargeTime, units };
+
 	const updateTime = () => {
 		const now = state.game.time;
+		// Reset time remaining if time goes backwards.
 		if (now < lastTime) {
 			timeRemaining = 0;
 		} else {
@@ -115,7 +120,7 @@ const makeCooldown = (rechargeTime, units=1) => {
 		return timeRemaining <= (rechargeTime * (units-1));
 	};
 
-	return {
+	const cooldown = {
 		canUse,
 		useIfAble() {
 			const usable = canUse();
@@ -130,9 +135,20 @@ const makeCooldown = (rechargeTime, units=1) => {
 				rechargeTime = options.rechargeTime;
 			}
 			if (options.units) units = options.units;
+		},
+		reset() {
+			timeRemaining = 0;
+			lastTime = 0;
+			this.mutate(initialOptions);
 		}
 	};
+
+	_allCooldowns.push(cooldown);
+
+	return cooldown;
 };
+
+const resetAllCooldowns = () => _allCooldowns.forEach(cooldown => cooldown.reset());
 
 const makeSpawner = ({ chance, cooldownPerSpawn, maxSpawns }) => {
 	const cooldown = makeCooldown(cooldownPerSpawn, maxSpawns);

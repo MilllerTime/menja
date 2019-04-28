@@ -10,11 +10,13 @@ function handleCanvasPointerDown(x, y) {
 }
 
 function handleCanvasPointerUp() {
-	pointerIsDown = false;
-	touchPoints.push({
-		touchBreak: true,
-		life: touchPointLife
-	});
+	if (pointerIsDown) {
+		pointerIsDown = false;
+		touchPoints.push({
+			touchBreak: true,
+			life: touchPointLife
+		});
+	}
 }
 
 function handleCanvasPointerMove(x, y) {

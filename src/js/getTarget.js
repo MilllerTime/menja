@@ -77,7 +77,7 @@ const getTarget = (() => {
 		let wireframe = false;
 		let health = 1;
 		let maxHealth = 3;
-		const spinner = spinnerSpawner.shouldSpawn();
+		const spinner = isInGame() && spinnerSpawner.shouldSpawn();
 
 		// Target Parameter Overrides
 		// --------------------------------

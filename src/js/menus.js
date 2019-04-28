@@ -5,6 +5,7 @@ const menuPauseNode = $('.menu--pause');
 const menuScoreNode = $('.menu--score');
 
 const finalScoreLblNode = $('.final-score-lbl');
+const highScoreLblNode = $('.high-score-lbl');
 
 
 
@@ -30,6 +31,11 @@ function renderMenus() {
 			break;
 		case MENU_SCORE:
 			finalScoreLblNode.textContent = state.game.score;
+			if (state.game.score > getHighScore()) {
+				highScoreLblNode.textContent = 'New High Score!';
+			} else {
+				highScoreLblNode.textContent = `High Score: ${getHighScore()}`;
+			}
 			showMenu(menuScoreNode);
 			break;
 	}

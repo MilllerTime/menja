@@ -23,17 +23,21 @@ body {
 /////////////////////*/
 
 
-.score-lbl,
+.hud__score,
 .pause-btn {
 	position: fixed;
 	font-size: calc(14px + 2vw + 1vh);
 }
 
-.score-lbl {
+.hud__score {
 	top: 0.65em;
 	left: 0.65em;
 	pointer-events: none;
 	user-select: none;
+}
+
+.cube-count-lbl {
+	font-size: 0.46em;
 }
 
 .pause-btn {
@@ -137,6 +141,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	user-select: none;
+	text-align: center;
 	color: rgba(255, 255, 255, 0.9);
 	opacity: 0;
 	visibility: hidden;
@@ -165,7 +170,7 @@ h1 {
 }
 
 h2 {
-	font-size: 2rem;
+	font-size: 1.2rem;
 	line-height: 1;
 	text-align: center;
 	font-weight: bold;
@@ -174,7 +179,12 @@ h2 {
 
 .final-score-lbl {
 	font-size: 5rem;
-	margin: -0.4em 0 0.5em;
+	margin: -0.2em 0 0;
+}
+
+.high-score-lbl {
+	font-size: 1.2rem;
+	margin: 0 0 2.5em;
 }
 
 button {
@@ -215,6 +225,17 @@ button:active {
 button:active::before {
 	transform: scale(1, 1);
 	opacity: 1;
+}
+
+.credits {
+	position: fixed;
+	width: 100%;
+	left: 0;
+	bottom: 20px;
+}
+
+a {
+	color: white;
 }
 
 /* Only enable hover state on large screens */

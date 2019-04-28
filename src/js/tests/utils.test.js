@@ -235,6 +235,52 @@ describe('utils', () => {
 				expect(cooldown.useIfAble()).toBe(true);
 				expect(cooldown.useIfAble()).toBe(false);
 			});
+
+			it('can be reset to initial state', () => {
+				resetTime();
+				const cooldown = makeCooldown(1000, 1);
+
+				// Use and mutate
+				cooldown.useIfAble();
+				expect(cooldown.canUse()).toBe(false);
+				cooldown.mutate({ rechargeTime: 500, units: 2 });
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				// Reset and assert original properties
+				cooldown.reset();
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.canUse()).toBe(true);
+			});
+
+			it('is reset when all cooldowns are reset', () => {
+				resetTime();
+				const cooldown = makeCooldown(1000, 1);
+
+				// Use and mutate
+				cooldown.useIfAble();
+				expect(cooldown.canUse()).toBe(false);
+				cooldown.mutate({ rechargeTime: 500, units: 2 });
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				// Reset and assert original properties
+				resetAllCooldowns();
+				expect(cooldown.useIfAble()).toBe(true);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.canUse()).toBe(false);
+				advanceTime(500);
+				expect(cooldown.canUse()).toBe(true);
+			});
 		});
 	});
 });

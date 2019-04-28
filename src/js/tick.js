@@ -149,7 +149,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 				if (isCasualGame()) {
 					incrementScore(-25);
 				} else {
-					setActiveMenu(MENU_SCORE);
+					endGame();
 				}
 			}
 			continue;

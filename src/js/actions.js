@@ -27,10 +27,12 @@ function incrementScore(inc) {
 
 function setCubeCount(count) {
 	state.game.cubeCount = count;
+	renderScoreHud();
 }
 
 function incrementCubeCount(inc) {
 	state.game.cubeCount += inc;
+	renderScoreHud();
 }
 
 
@@ -44,8 +46,11 @@ function setGameMode(mode) {
 
 function resetGame() {
 	resetAllTargets();
+	state.game.time = 0;
+	resetAllCooldowns();
 	setScore(0);
 	setCubeCount(0);
+	spawnTime = getSpawnDelay();
 }
 
 function pauseGame() {
@@ -54,6 +59,15 @@ function pauseGame() {
 
 function resumeGame() {
 	isPaused() && setActiveMenu(null);
+}
+
+function endGame() {
+	setActiveMenu(MENU_SCORE);
+	handleCanvasPointerUp();
+	// Update high score if needed, AFTER rendering the score menu.
+	if (state.game.score > getHighScore()) {
+		setHighScore(state.game.score);
+	}
 }
 
 
