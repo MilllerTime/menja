@@ -34,7 +34,7 @@ function renderMenus() {
 			if (state.game.score > getHighScore()) {
 				highScoreLblNode.textContent = 'New High Score!';
 			} else {
-				highScoreLblNode.textContent = `High Score: ${getHighScore()}`;
+				highScoreLblNode.textContent = `High Score: ${getHighScoreFormatted()}`;
 			}
 			showMenu(menuScoreNode);
 			break;

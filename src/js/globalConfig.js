@@ -13,12 +13,16 @@ const allColors = [BLUE, GREEN, PINK, ORANGE];
 
 // Gameplay
 const getSpawnDelay = () => {
-	const spawnDelayMax = 1100;
+	const spawnDelayMax = 1400;
 	const spawnDelayMin = 550;
-	const spawnDelay = spawnDelayMax - state.game.cubeCount * 2;
+	const spawnDelay = spawnDelayMax - state.game.cubeCount * 3.1;
 	return Math.max(spawnDelay, spawnDelayMin);
 }
-const doubleStrongEnableScore = 2500;
+const doubleStrongEnableScore = 2000;
+// Number of cubes that must be smashed before activating a feature.
+const slowmoThreshold = 10;
+const strongThreshold = 25;
+const spinnerThreshold = 25;
 
 // Interaction state
 let pointerIsDown = false;

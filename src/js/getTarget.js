@@ -66,7 +66,10 @@ const getTarget = (() => {
 	}
 
 	return function getTarget() {
-		if (!doubleStrong && state.game.score > doubleStrongEnableScore) {
+		if (doubleStrong && state.game.score <= doubleStrongEnableScore) {
+			doubleStrong = false;
+			// Spawner is reset automatically when game resets.
+		} else if (!doubleStrong && state.game.score > doubleStrongEnableScore) {
 			doubleStrong = true;
 			strongSpawner.mutate({ maxSpawns: 2 });
 		}
@@ -77,15 +80,15 @@ const getTarget = (() => {
 		let wireframe = false;
 		let health = 1;
 		let maxHealth = 3;
-		const spinner = isInGame() && spinnerSpawner.shouldSpawn();
+		const spinner = state.game.cubeCount >= spinnerThreshold && isInGame() && spinnerSpawner.shouldSpawn();
 
 		// Target Parameter Overrides
 		// --------------------------------
-		if (slowmoSpawner.shouldSpawn()) {
+		if (state.game.cubeCount >= slowmoThreshold && slowmoSpawner.shouldSpawn()) {
 			color = BLUE;
 			wireframe = true;
 		}
-		else if (strongSpawner.shouldSpawn()) {
+		else if (state.game.cubeCount >= strongThreshold && strongSpawner.shouldSpawn()) {
 			color = PINK;
 			health = 3;
 		}

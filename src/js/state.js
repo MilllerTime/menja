@@ -52,4 +52,5 @@ const getHighScore = () => {
 	const raw = localStorage.getItem(highScoreKey);
 	return raw ? parseInt(raw, 10) : 0;
 };
+const getHighScoreFormatted = () => getHighScore().toLocaleString();
 const setHighScore = score => localStorage.setItem(highScoreKey, String(score))
