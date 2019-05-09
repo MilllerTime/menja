@@ -45,7 +45,6 @@ const getTarget = (() => {
 				model: optimizeModel(makeRecursiveCubeModel({
 					recursionLevel: 1,
 					splitFn: mengerSpongeSplit,
-					color: color, // TODO: Remove
 					scale: targetRadius
 				})),
 				color: color,

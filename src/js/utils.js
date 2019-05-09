@@ -16,6 +16,16 @@ const handlePointerDown = (element, handler) => {
 };
 
 
+
+////////////////////////
+// Formatting Helpers //
+////////////////////////
+
+// Converts a number into a formatted string with thousand separators.
+const formatNumber = num => num.toLocaleString();
+
+
+
 ////////////////////
 // Math Constants //
 ////////////////////

@@ -2,7 +2,7 @@
 
 // A simple cube, 8 vertices, 6 quads.
 // Defaults to an edge length of 2 units, can be influenced with `scale`.
-function makeCubeModel({ color, scale=1 }) {
+function makeCubeModel({ scale=1 }) {
 	return {
 		vertices: [
 			// top
@@ -18,35 +18,17 @@ function makeCubeModel({ color, scale=1 }) {
 		],
 		polys: [
 			// z = 1
-			{
-				vIndexes: [0, 1, 2, 3],
-				color: color
-			},
+			{ vIndexes: [0, 1, 2, 3] },
 			// z = -1
-			{
-				vIndexes: [7, 6, 5, 4],
-				color: color
-			},
+			{ vIndexes: [7, 6, 5, 4] },
 			// y = 1
-			{
-				vIndexes: [3, 2, 6, 7],
-				color: color
-			},
+			{ vIndexes: [3, 2, 6, 7] },
 			// y = -1
-			{
-				vIndexes: [4, 5, 1, 0],
-				color: color
-			},
+			{ vIndexes: [4, 5, 1, 0] },
 			// x = 1
-			{
-				vIndexes: [5, 6, 2, 1],
-				color: color
-			},
+			{ vIndexes: [5, 6, 2, 1] },
 			// x = -1
-			{
-				vIndexes: [0, 3, 7, 4],
-				color: color
-			}
+			{ vIndexes: [0, 3, 7, 4] }
 		]
 	};
 }
@@ -71,7 +53,7 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 	const finalModel = { vertices: [], polys: [] };
 
 	// Generate single cube model and scale it.
-	const cubeModel = makeCubeModel({ color });
+	const cubeModel = makeCubeModel({ scale: 1 });
 	cubeModel.vertices.forEach(scaleVector(getScaleAtLevel(recursionLevel)));
 
 	// Compute the max distance x, y, or z origin values will be.
@@ -102,9 +84,7 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 		// Clone polys, shift referenced vertex indexes, and compute color.
 		finalModel.polys.push(
 			...cubeModel.polys.map(poly => ({
-				vIndexes: poly.vIndexes.map(add(cubeIndex * 8)),
-				// Precompute color for draw perf
-				color: poly.color
+				vIndexes: poly.vIndexes.map(add(cubeIndex * 8))
 			}))
 		);
 	});
@@ -113,6 +93,8 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 }
 
 
+// o: Vector3D - Position of cube's origin (center).
+// s: Vector3D - Determines size of menger sponge.
 function mengerSpongeSplit(o, s) {
 	return [
 		// Top

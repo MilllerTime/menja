@@ -25,10 +25,7 @@ const createBurst = (() => {
 		let frag = pool.get(target.color).pop();
 		if (!frag) {
 			frag = new Entity({
-				model: makeCubeModel({
-					color: target.color, // TODO: Remove
-					scale: fragRadius
-				}),
+				model: makeCubeModel({ scale: fragRadius }),
 				color: target.color,
 				wireframe: target.wireframe
 			});
