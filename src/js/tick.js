@@ -25,7 +25,8 @@ function tick(width, height, simTime, simSpeed, lag) {
 		}
 		targetSpeed = pointerIsDown ? 0.075 : 0.3;
 	} else {
-		targetSpeed = 1;
+		const menuPointerDown = isMenuVisible() && pointerIsDown;
+		targetSpeed = menuPointerDown ? 0.025 : 1;
 	}
 
 	renderSlowmoStatus(slowmoRemaining / slowmoDuration);
@@ -183,7 +184,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 					if (pointerSpeedScaled > minPointerSpeed) {
 						target.health--;
-						incrementScore(10);
+						if (isInGame()) {
+							incrementScore(10);
+						}
 
 						if (target.health <= 0) {
 							incrementCubeCount(1);

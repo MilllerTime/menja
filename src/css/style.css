@@ -129,8 +129,15 @@ body {
 	transition-timing-function: ease-out;
 }
 
+.menus.interactive-mode::before {
+	opacity: 0.02;
+}
+
+
+
 /* Menu containers */
 .menu {
+	pointer-events: none;
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -158,6 +165,15 @@ body {
 	transition-duration: 0.4s;
 	transition-timing-function: ease-out;
 }
+
+.menus.interactive-mode .menu.active {
+	opacity: 0.6;
+}
+
+.menus:not(.interactive-mode) .menu.active > * {
+	pointer-events: auto;
+}
+
 
 /* Common menu elements */
 

@@ -6,6 +6,9 @@ function handleCanvasPointerDown(x, y) {
 		pointerIsDown = true;
 		pointerScreen.x = x;
 		pointerScreen.y = y;
+		// On when menus are open, point down/up toggles an interactive mode.
+		// We just need to rerender the menu system for it to respond.
+		if (isMenuVisible()) renderMenus();
 	}
 }
 
@@ -16,6 +19,9 @@ function handleCanvasPointerUp() {
 			touchBreak: true,
 			life: touchPointLife
 		});
+		// On when menus are open, point down/up toggles an interactive mode.
+		// We just need to rerender the menu system for it to respond.
+		if (isMenuVisible()) renderMenus();
 	}
 }
 
@@ -43,7 +49,7 @@ if ('PointerEvent' in window) {
 
 	// We also need to know if the mouse leaves the page. For this game, it's best if that
 	// cancels a swipe, so essentially acts as a "mouseup" event.
-	document.addEventListener('mouseout', handleCanvasPointerUp);
+	document.body.addEventListener('mouseleave', handleCanvasPointerUp);
 } else {
 	let activeTouchId = null;
 	canvas.addEventListener('touchstart', event => {

@@ -39,6 +39,7 @@ const state = {
 ////////////////////////////
 
 const isInGame = () => !state.menus.active;
+const isMenuVisible = () => !!state.menus.active;
 const isCasualGame = () => state.game.mode === GAME_MODE_CASUAL;
 const isPaused = () => state.menus.active === MENU_PAUSE;
 

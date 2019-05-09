@@ -40,8 +40,9 @@ function renderMenus() {
 			break;
 	}
 
-	setHudVisibility(!state.menus.active);
-	menuContainerNode.classList.toggle('has-active', state.menus.active);
+	setHudVisibility(!isMenuVisible());
+	menuContainerNode.classList.toggle('has-active', isMenuVisible());
+	menuContainerNode.classList.toggle('interactive-mode', isMenuVisible() && pointerIsDown);
 }
 
 renderMenus();
