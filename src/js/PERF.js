@@ -15,8 +15,8 @@ const PERF_UPDATE = () => {};
 // ------------------------------------
 
 /*
-const updateRate = 300; // ms
-let lastUpdateTime = performance.now();
+const perfUpdateRate = 300; // ms
+let perfLastUpdateTime = performance.now();
 
 const perfStartTimes = {};
 const perfTimings = {};
@@ -53,8 +53,8 @@ document.body.appendChild(perfNode);
 // Update display if needed
 const PERF_UPDATE = () => {
 	const now = performance.now();
-	const elapsed = now - lastUpdateTime;
-	if (elapsed > updateRate) {
+	const elapsed = now - perfLastUpdateTime;
+	if (elapsed > perfUpdateRate) {
 		let html = '';
 		// Average recorded times, display them, and reset everything
 		const add = (a, b) => a + b;
@@ -67,7 +67,7 @@ const PERF_UPDATE = () => {
 		});
 
 		perfNode.innerHTML = html;
-		lastUpdateTime = performance.now();
+		perfLastUpdateTime = performance.now();
 	}
 }
 */
