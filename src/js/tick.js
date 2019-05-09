@@ -13,8 +13,6 @@ let targetSpeed = 1;
 
 
 function tick(width, height, simTime, simSpeed, lag) {
-	if (isPaused()) return;
-
 	PERF_START('frame');
 	PERF_START('tick');
 

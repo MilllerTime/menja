@@ -30,6 +30,14 @@ function setupCanvases() {
 	function frameHandler(timestamp) {
 		let frameTime = timestamp - lastTimestamp;
 		lastTimestamp = timestamp;
+
+		// always queue another frame
+		raf();
+
+		// If game is paused, we'll still track frameTime (above) but all other
+		// game logic and drawing can be avoided.
+		if (isPaused()) return;
+
 		// make sure negative time isn't reported (first frame can be whacky)
 		if (frameTime < 0) {
 			frameTime = 17;
@@ -54,17 +62,13 @@ function setupCanvases() {
 		// Auto clear canvas
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		// Auto scale drawing for high res displays, and incorporate `viewScale`.
-		// Also shift canvas to (0, 0) is the middle of the screen.
+		// Also shift canvas so (0, 0) is the middle of the screen.
 		// This just works with 3D perspective projection.
 		const drawScale = dpr * viewScale;
 		ctx.scale(drawScale, drawScale);
 		ctx.translate(halfW, halfH);
 		draw(ctx, width, height, viewScale);
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-
-		// always queue another frame
-		raf();
 	}
 	const raf = () => requestAnimationFrame(frameHandler);
 	// Start loop
