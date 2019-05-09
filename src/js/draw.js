@@ -45,7 +45,7 @@ function draw(ctx, width, height, viewScale) {
 	PERF_START('drawPolys');
 
 	allPolys.forEach(p => {
-		if (!p.wireframe && p.normalCamera.x < 0) return;
+		if (!p.wireframe && p.normalCamera.z < 0) return;
 
 		if (p.strokeWidth !== 0) {
 			ctx.lineWidth = p.normalCamera.z < 0 ? p.strokeWidth * 0.5 : p.strokeWidth;
