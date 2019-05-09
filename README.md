@@ -6,7 +6,7 @@ A game about smashing cubes.
 
 ## Development Commands
 
-If clone repo fresh, first install dev dependencies with:
+If cloning repo fresh, first install dev dependencies with:
 
 ```
 npm install
