@@ -18,11 +18,13 @@ function setScore(score) {
 }
 
 function incrementScore(inc) {
-	state.game.score += inc;
-	if (state.game.score < 0) {
-		state.game.score = 0;
+	if (isInGame()) {
+		state.game.score += inc;
+		if (state.game.score < 0) {
+			state.game.score = 0;
+		}
+		renderScoreHud();
 	}
-	renderScoreHud();
 }
 
 function setCubeCount(count) {
@@ -31,8 +33,10 @@ function setCubeCount(count) {
 }
 
 function incrementCubeCount(inc) {
-	state.game.cubeCount += inc;
-	renderScoreHud();
+	if (isInGame()) {
+		state.game.cubeCount += inc;
+		renderScoreHud();
+	}
 }
 
 

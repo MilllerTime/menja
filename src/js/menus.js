@@ -56,14 +56,14 @@ renderMenus();
 // Main Menu
 handleClick($('.play-normal-btn'), () => {
 	setGameMode(GAME_MODE_RANKED);
-	resetGame();
 	setActiveMenu(null);
+	resetGame();
 });
 
 handleClick($('.play-casual-btn'), () => {
 	setGameMode(GAME_MODE_CASUAL);
-	resetGame();
 	setActiveMenu(null);
+	resetGame();
 });
 
 // Pause Menu
@@ -72,8 +72,8 @@ handleClick($('.menu-btn--pause'), () => setActiveMenu(MENU_MAIN));
 
 // Score Menu
 handleClick($('.play-again-btn'), () => {
-	resetGame();
 	setActiveMenu(null);
+	resetGame();
 });
 
 handleClick($('.menu-btn--score'), () => setActiveMenu(MENU_MAIN));

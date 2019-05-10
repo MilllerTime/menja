@@ -184,9 +184,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 					if (pointerSpeedScaled > minPointerSpeed) {
 						target.health--;
-						if (isInGame()) {
-							incrementScore(10);
-						}
+						incrementScore(10);
 
 						if (target.health <= 0) {
 							incrementCubeCount(1);
