@@ -189,7 +189,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 						if (target.health <= 0) {
 							incrementCubeCount(1);
 							createBurst(target, forceMultiplier);
-							sparkBurst(hitX, hitY, 7, sparkSpeed);
+							sparkBurst(hitX, hitY, 8, sparkSpeed);
 							if (target.wireframe) {
 								slowmoRemaining = slowmoDuration;
 								spawnTime = 0;
@@ -203,6 +203,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 							updateTargetHealth(target, 0);
 						}
 					} else {
+						incrementScore(5);
 						sparkBurst(hitX, hitY, 3, sparkSpeed);
 					}
 				}
