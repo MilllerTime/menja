@@ -96,7 +96,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 		const target = getTarget();
 		const spawnRadius = Math.min(centerX * 0.8, maxSpawnX);
 		target.x = (Math.random() * spawnRadius * 2 - spawnRadius);
-		target.y = centerY + targetHitRadius;
+		target.y = centerY + targetHitRadius * 2;
 		target.z = (Math.random() * targetRadius*2 - targetRadius);
 		target.xD = Math.random() * (target.x * -2 / 120);
 		target.yD = -20;
@@ -141,7 +141,7 @@ function tick(width, height, simTime, simSpeed, lag) {
 		target.project();
 
 		// Remove if offscreen
-		if (target.projected.y > centerY + targetHitRadius * 2) {
+		if (target.y > centerY + targetHitRadius * 2) {
 			targets.splice(i, 1);
 			returnTarget(target);
 			if (isInGame()) {
