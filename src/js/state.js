@@ -53,4 +53,11 @@ const getHighScore = () => {
 	const raw = localStorage.getItem(highScoreKey);
 	return raw ? parseInt(raw, 10) : 0;
 };
-const setHighScore = score => localStorage.setItem(highScoreKey, String(score))
+
+let _lastHighscore = getHighScore();
+const setHighScore = score => {
+	_lastHighscore = getHighScore();
+	localStorage.setItem(highScoreKey, String(score));
+};
+
+const isNewHighScore = () => state.game.score > _lastHighscore;

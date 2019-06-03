@@ -66,12 +66,11 @@ function resumeGame() {
 }
 
 function endGame() {
-	setActiveMenu(MENU_SCORE);
 	handleCanvasPointerUp();
-	// Update high score if needed, AFTER rendering the score menu.
-	if (state.game.score > getHighScore()) {
+	if (isNewHighScore()) {
 		setHighScore(state.game.score);
 	}
+	setActiveMenu(MENU_SCORE);
 }
 
 
