@@ -41,9 +41,10 @@ However, [microbundle](https://github.com/developit/microbundle) could be worth 
 All JS is:
 
 1. Combined into a single file
-2. Wrapped in an IIFE to keep global game vars private and mangle-able
-3. Run through a minifier/compiler
-4. Inlined directly into `index.html`
+2. Stripped of performance monitoring code
+3. Wrapped in an IIFE to keep global game vars private and mangle-able
+4. Run through a minifier/compiler
+5. Inlined directly into `index.html`
 
 All CSS is minified and inlined.
 
@@ -65,15 +66,11 @@ Assertions make use of [@mjackson](https://twitter.com/mjackson)'s [expect](http
 
 Included is a system for tracking performance of various subroutines and displaying the data in an on screen overlay. This is very helpful when running on various mobile devices in the wild.
 
+
 ### Enabling & Disabling Performance Monitoring
 
-To enable monitoring and display the overlay:
+To enable, set the value of `showPerfMonitor` to `true` in `PERF.js`. To disable, set to `false`.
 
-1. Open `PERF.js`
-2. Comment out the "dummy set" of functions
-3. Uncomment all code below the "dummy set"
-
-To disable, reverse comment/uncomment above.
 
 ### Changing What is Monitored
 
@@ -98,4 +95,6 @@ at the start of the subroutine, and at the end call:
 PERF_END('name-of-subroutine');
 ```
 
-Care should be taken to only use a subroutine name once throughout the entire program. If a name is reused, multiple subroutines will have their run times averaged.
+Always use single quotes for the name string, or the function invokation won't be removed for production build.
+
+Care should also be taken to only use a subroutine name once throughout the entire program. If a name is reused, multiple subroutines will have their run times averaged.

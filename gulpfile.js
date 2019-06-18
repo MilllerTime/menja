@@ -4,6 +4,7 @@ const useref = require('gulp-useref');
 const inline = require('gulp-inline');
 const minifyjs = require('gulp-babel-minify');
 const htmlmin = require('gulp-htmlmin');
+const replace = require('gulp-replace');
 const iife = require('gulp-iife');
 const del = require('del');
 const chalk = require('chalk');
@@ -20,9 +21,29 @@ gulp.task('combine-files', () => {
 		.pipe(gulp.dest('build'));
 });
 
-// Wrap all JS in an IIFE so global variables can be mangled.
-gulp.task('iife', () => {
+
+// RegExp used to match custom `PERF_*` functions.
+//
+// Matches:
+// - PERF_START('some-name');
+// - PERF_END('some-name')
+// - PERF_UPDATE();
+// - PERF_FOO('@#$%');
+//
+// Doesn't Match:
+// - PERF_START("some-name"); // no double quotes
+// - PERF_START('foo', 'bar'); // no multiple arguments
+// - PERF_start('some-name'); // no lowercase in function name
+
+const perfFnRegExp = /PERF_[A-Z]+\(('[^']+')?\);?/g;
+
+
+// Manual optimizations:
+//   - Remove invokation of all `PERF_*` functions.
+//   - Wrap all JS in an IIFE so global variables can be mangled.
+gulp.task('optimize-manual', () => {
 	return gulp.src('build/combined.js')
+		.pipe(replace(perfFnRegExp, ''))
 		.pipe(iife({
 			useStrict: true,
 			trimCode: true,
@@ -65,7 +86,7 @@ gulp.task('default', callback => {
 	runSequence(
 		'clean',
 		'combine-files',
-		'iife',
+		'optimize-manual',
 		'inline-minify',
 		finish
 	);

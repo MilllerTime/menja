@@ -1,32 +1,25 @@
-// Performance measuring tools
+// Performance measuring tools. For production builds, this file is not included and all
+// uses of the `PERF_*` functions are removed from application code.
 
-// ------------------------------------
-// ------------------------------------
-// DUMMY SET
-// Comment everything in this file
-// but these to reduce bundle size.
-// ------------------------------------
+// Enable/Disable performance monitoring
+const showPerfMonitor = false;
 
-const PERF_START = () => {};
-const PERF_END = () => {};
-const PERF_UPDATE = () => {};
-
-// ------------------------------------
-// ------------------------------------
-
-/*
+// Config
 const perfUpdateRate = 300; // ms
-let perfLastUpdateTime = performance.now();
 
+// State
+let perfLastUpdateTime = performance.now();
 const perfStartTimes = {};
 const perfTimings = {};
 
 // START & END measure time
 const PERF_START = name => {
+	if (!showPerfMonitor) return;
 	perfStartTimes[name] = performance.now();
 };
 
 const PERF_END = name => {
+	if (!showPerfMonitor) return;
 	const start = perfStartTimes[name];
 	invariant(start, `PERF_END called with "${name}" before matching PERF_START.`);
 	const timings = perfTimings[name] || [];
@@ -34,24 +27,9 @@ const PERF_END = name => {
 	perfTimings[name] = timings;
 };
 
-
-const perfNode = document.createElement('div');
-perfNode.style.position = 'fixed';
-perfNode.style.left = '0px';
-perfNode.style.bottom = '0px';
-perfNode.style.padding = '8px 16px';
-perfNode.style.fontSize = '10px';
-perfNode.style.fontFamily = 'monospace';
-perfNode.style.lineHeight = 1.3;
-perfNode.style.backgroundColor = '#000';
-perfNode.style.color = '#FFF';
-perfNode.style.opacity = 0.6;
-perfNode.style.pointerEvents = 'none';
-perfNode.style.userSelect = 'none';
-document.body.appendChild(perfNode);
-
 // Update display if needed
 const PERF_UPDATE = () => {
+	if (!showPerfMonitor) return;
 	const now = performance.now();
 	const elapsed = now - perfLastUpdateTime;
 	if (elapsed > perfUpdateRate) {
@@ -70,4 +48,20 @@ const PERF_UPDATE = () => {
 		perfLastUpdateTime = performance.now();
 	}
 }
-*/
+
+const perfNode = document.createElement('div');
+if (showPerfMonitor) {
+	perfNode.style.position = 'fixed';
+	perfNode.style.left = '0px';
+	perfNode.style.bottom = '0px';
+	perfNode.style.padding = '8px 16px';
+	perfNode.style.fontSize = '10px';
+	perfNode.style.fontFamily = 'monospace';
+	perfNode.style.lineHeight = 1.3;
+	perfNode.style.backgroundColor = '#000';
+	perfNode.style.color = '#FFF';
+	perfNode.style.opacity = 0.6;
+	perfNode.style.pointerEvents = 'none';
+	perfNode.style.userSelect = 'none';
+	document.body.appendChild(perfNode);
+}
