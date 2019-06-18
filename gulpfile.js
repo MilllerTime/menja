@@ -1,7 +1,9 @@
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 const useref = require('gulp-useref');
+const concat = require('gulp-concat');
 const inline = require('gulp-inline');
+const filter = require('gulp-filter');
 const minifyjs = require('gulp-babel-minify');
 const htmlmin = require('gulp-htmlmin');
 const replace = require('gulp-replace');
@@ -14,6 +16,7 @@ const gzipSize = require('gzip-size');
 
 gulp.task('clean', () => del.sync('build'));
 
+
 // Concat CSS/JS files linked from index.html, and rewrite references.
 gulp.task('combine-files', () => {
 	return gulp.src('src/index.html')
@@ -21,29 +24,44 @@ gulp.task('combine-files', () => {
 		.pipe(gulp.dest('build'));
 });
 
-
-// RegExp used to match custom `PERF_*` functions.
-//
-// Matches:
-// - PERF_START('some-name');
-// - PERF_END('some-name')
-// - PERF_UPDATE();
-// - PERF_FOO('@#$%');
-//
-// Doesn't Match:
-// - PERF_START("some-name"); // no double quotes
-// - PERF_START('foo', 'bar'); // no multiple arguments
-// - PERF_start('some-name'); // no lowercase in function name
-
-const perfFnRegExp = /PERF_[A-Z]+\(('[^']+')?\);?/g;
+// Special concat for CodePen.
+// Only outputs JS, with generous whitespace at each file boundary.
+gulp.task('combine-files-codepen', () => {
+	return gulp.src('src/index.html')
+		.pipe(useref({ noconcat: true }))
+		.pipe(filter('**/*.js'))
+		.pipe(concat('combined.js', { newLine: '\r\n'.repeat(5) }))
+		.pipe(gulp.dest('build'));
+});
 
 
-// Manual optimizations:
-//   - Remove invokation of all `PERF_*` functions.
-//   - Wrap all JS in an IIFE so global variables can be mangled.
-gulp.task('optimize-manual', () => {
+// Remove invokation of all `PERF_*` functions.
+gulp.task('stripPerfCode', () => {
+
+	// RegExp used to match custom `PERF_*` functions.
+	//
+	// Matches:
+	// - PERF_START('some-name');
+	// - PERF_END('some-name')
+	// - PERF_UPDATE();
+	// - PERF_FOO('@#$%');
+	//
+	// Doesn't Match:
+	// - PERF_START("some-name"); // no double quotes
+	// - PERF_START('foo', 'bar'); // no multiple arguments
+	// - PERF_start('some-name'); // no lowercase in function name
+
+	const perfFnRegExp = /PERF_[A-Z]+\(('[^']+')?\);?/g;
+
 	return gulp.src('build/combined.js')
 		.pipe(replace(perfFnRegExp, ''))
+		.pipe(gulp.dest('build'));
+});
+
+
+// Wrap all JS in an IIFE so global variables can be mangled.
+gulp.task('iife', () => {
+	return gulp.src('build/combined.js')
 		.pipe(iife({
 			useStrict: true,
 			trimCode: true,
@@ -52,6 +70,7 @@ gulp.task('optimize-manual', () => {
 		}))
 		.pipe(gulp.dest('build'));
 });
+
 
 // Minify all code, and inline CSS/JS into HTML file.
 gulp.task('inline-minify', () => {
@@ -86,8 +105,25 @@ gulp.task('default', callback => {
 	runSequence(
 		'clean',
 		'combine-files',
-		'optimize-manual',
+		'stripPerfCode',
+		'iife',
 		'inline-minify',
+		finish
+	);
+});
+
+
+
+gulp.task('codepen', callback => {
+	const finish = () => {
+		console.log(chalk.cyanBright('CODEPEN BUILD COMPLETE'));
+		callback();
+	}
+
+	runSequence(
+		'clean',
+		'combine-files-codepen',
+		'stripPerfCode',
 		finish
 	);
 });

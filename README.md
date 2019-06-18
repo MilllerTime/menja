@@ -9,21 +9,26 @@ A game about smashing cubes.
 If cloning repo fresh, first install dev dependencies with:
 
 ```
-npm install
+yarn
 ```
 
 To launch a live reloading dev server, run:
 
 ```
-npm run start
+yarn start
 ```
 
 To perform an optimized final build, run:
 
 ```
-npm run build
+yarn build
 ```
 
+To perform a special build that concatenates all JS for CodePen, run:
+
+```
+yarn build:codepen
+```
 
 
 ## Adding New JS files
