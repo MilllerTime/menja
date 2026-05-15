@@ -207,8 +207,28 @@ function tick(width, height, simTime, simSpeed, lag) {
 							activateShockwave(width, height);
 							scoreGain = 75;
 							incrementCubeCount(1);
+						} else if (target.blockType === BLOCK_TYPE_POWERUP_MULTISHOT) {
+							activateMultiShot();
+							scoreGain = 75;
+							incrementCubeCount(1);
+						} else if (target.blockType === BLOCK_TYPE_BOSS) {
+							bossHealth -= 10;
+							scoreGain = 50;
 						} else {
 							incrementCubeCount(1);
+						}
+
+						// Update challenge progress
+						if (activeChallenge) {
+							if (activeChallenge.type === 'SPEED') {
+								updateChallengeProgress(1);
+							} else if (activeChallenge.type === 'COLOR' && 
+								[target.blockType === BLOCK_TYPE_COIN, 
+								 target.blockType === BLOCK_TYPE_BOMB,
+								 target.blockType === BLOCK_TYPE_POWERUP_FREEZE,
+								 target.blockType === BLOCK_TYPE_POWERUP_SHOCKWAVE].includes(true)) {
+								updateChallengeProgress(1);
+							}
 						}
 
 						if (target.health <= 0) {

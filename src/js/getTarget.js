@@ -57,6 +57,12 @@ const getTarget = (() => {
 		maxSpawns: 1
 	});
 
+	const multiShotPowerupSpawner = makeSpawner({
+		chance: 0.15,
+		cooldownPerSpawn: 20000,
+		maxSpawns: 1
+	});
+
 	// Cached array instances, no need to allocate every time.
 	const axisOptions = [
 		['x', 'y'],
@@ -150,6 +156,22 @@ const getTarget = (() => {
 			color = PURPLE;
 			blockType = BLOCK_TYPE_POWERUP_SHOCKWAVE;
 			specialEffect = 'shockwave';
+		}
+		else if (state.game.cubeCount >= powerupThreshold && multiShotPowerupSpawner.shouldSpawn() && !multiShotActive) {
+			color = PURPLE;
+			blockType = BLOCK_TYPE_POWERUP_MULTISHOT;
+			specialEffect = 'multishot';
+		}
+
+		// Boss spawn check
+		if (state.game.time > bossSpawnTimer + bossSpawnInterval && !bossActive) {
+			bossSpawnTimer = state.game.time;
+			spawnBoss();
+		}
+
+		// Challenge spawn check
+		if (!activeChallenge && !bossActive && Math.random() < 0.001) {
+			startRandomChallenge();
 		}
 
 		// Target Creation

@@ -147,6 +147,108 @@ body {
 	transform: scaleX(1);
 }
 
+/* Multi-shot power-up indicator */
+.multishot {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(255, 215, 0, 0.1);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s;
+	z-index: 9;
+	border: 3px solid rgba(255, 215, 0, 0.5);
+}
+
+/* Boss health bar */
+.boss-health {
+	position: fixed;
+	top: 60px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 400px;
+	height: 24px;
+	background-color: rgba(0, 0, 0, 0.5);
+	border: 2px solid rgba(231, 76, 60, 0.8);
+	border-radius: 4px;
+	display: none;
+	z-index: 20;
+}
+
+.boss-health__bar {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, #e74c3c, #c0392b);
+	transform-origin: 0 0;
+	transition: transform 0.2s;
+}
+
+.boss-health__lbl {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	text-align: center;
+	line-height: 24px;
+	font-size: 14px;
+	color: #fff;
+	text-shadow: 1px 1px 2px #000;
+}
+
+/* Challenge display */
+.challenge {
+	position: fixed;
+	top: 100px;
+	right: 20px;
+	width: 200px;
+	padding: 10px;
+	background-color: rgba(0, 0, 0, 0.6);
+	border: 2px solid rgba(103, 215, 240, 0.6);
+	border-radius: 8px;
+	display: none;
+	z-index: 19;
+}
+
+.challenge__bar {
+	display: block;
+	width: 100%;
+	height: 8px;
+	background-color: rgba(103, 215, 240, 0.8);
+	margin-top: 8px;
+	transform-origin: 0 0;
+	transition: transform 0.2s;
+}
+
+.challenge__lbl {
+	font-size: 12px;
+	color: #67d7f0;
+	text-align: center;
+	display: block;
+}
+
+/* Notification popup */
+.notification {
+	position: fixed;
+	top: 20%;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 15px 30px;
+	background-color: rgba(0, 0, 0, 0.8);
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	border-radius: 8px;
+	font-size: 18px;
+	color: #fff;
+	text-align: center;
+	opacity: 0;
+	transition: opacity 0.3s;
+	display: none;
+	z-index: 100;
+	pointer-events: none;
+}
+
 
 
 /*/////////////////////

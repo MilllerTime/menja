@@ -54,6 +54,80 @@ function renderShockwaveCooldown(percentRemaining) {
 	}
 }
 
+function renderMultiShotStatus(percentRemaining) {
+	const multiShotNode = $('.multishot');
+	if (multiShotNode) {
+		multiShotNode.style.opacity = percentRemaining;
+	}
+}
+
+function showBossHealthBar() {
+	const bossHealthNode = $('.boss-health');
+	if (bossHealthNode) {
+		bossHealthNode.style.display = 'block';
+		updateBossHealthDisplay(1);
+	}
+}
+
+function hideBossHealthBar() {
+	const bossHealthNode = $('.boss-health');
+	if (bossHealthNode) {
+		bossHealthNode.style.display = 'none';
+	}
+}
+
+function updateBossHealthDisplay(percent) {
+	const bossHealthBar = $('.boss-health__bar');
+	const bossHealthLbl = $('.boss-health__lbl');
+	if (bossHealthBar) {
+		bossHealthBar.style.transform = `scaleX(${percent})`;
+	}
+	if (bossHealthLbl) {
+		bossHealthLbl.textContent = `BOSS: ${Math.round(percent * 100)}%`;
+	}
+}
+
+function showChallengeDisplay() {
+	const challengeNode = $('.challenge');
+	if (challengeNode) {
+		challengeNode.style.display = 'block';
+	}
+}
+
+function hideChallengeDisplay() {
+	const challengeNode = $('.challenge');
+	if (challengeNode) {
+		challengeNode.style.display = 'none';
+	}
+}
+
+function updateChallengeDisplay(percentRemaining) {
+	const challengeBar = $('.challenge__bar');
+	const challengeLbl = $('.challenge__lbl');
+	if (challengeBar && activeChallenge) {
+		challengeBar.style.transform = `scaleX(${percentRemaining})`;
+	}
+	if (challengeLbl && activeChallenge) {
+		challengeLbl.textContent = `${activeChallenge.type}: ${activeChallenge.progress}/${activeChallenge.target}`;
+	}
+}
+
+function showChallengeNotification(message) {
+	const notificationNode = $('.notification');
+	if (notificationNode) {
+		notificationNode.textContent = message;
+		notificationNode.style.opacity = 1;
+		notificationNode.style.display = 'block';
+		
+		setTimeout(() => {
+			notificationNode.style.opacity = 0;
+			setTimeout(() => {
+				notificationNode.style.display = 'none';
+			}, 500);
+		}, 2000);
+	}
+}
+
 
 //////////////////
 // Pause Button //
