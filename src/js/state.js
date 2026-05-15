@@ -25,7 +25,22 @@ const state = {
 		// Player score.
 		score: 0,
 		// Total number of cubes smashed in game.
-		cubeCount: 0
+		cubeCount: 0,
+		// Current combo count.
+		combo: 0,
+		// Time of last hit (for combo tracking).
+		lastHitTime: 0,
+		// Combo multiplier.
+		comboMultiplier: 1,
+		// Active power-ups.
+		powerUps: {
+			freeze: false,
+			shockwave: false
+		},
+		// Cooldowns.
+		cooldowns: {
+			shockwave: 0
+		}
 	},
 	menus: {
 		// Set to `null` to hide all menus

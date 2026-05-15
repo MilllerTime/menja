@@ -54,7 +54,15 @@ function resetGame() {
 	resetAllCooldowns();
 	setScore(0);
 	setCubeCount(0);
+	state.game.combo = 0;
+	state.game.lastHitTime = 0;
+	state.game.comboMultiplier = 1;
+	state.game.powerUps.freeze = false;
+	state.game.powerUps.shockwave = false;
+	state.game.cooldowns.shockwave = 0;
 	spawnTime = getSpawnDelay();
+	resetSpecialEffects();
+	resetCombo();
 }
 
 function pauseGame() {

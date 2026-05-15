@@ -18,16 +18,20 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 	state.game.time += simTime;
 
-	if (slowmoRemaining > 0) {
+	if (slowmoRemaining > 0 && !state.game.powerUps.freeze) {
 		slowmoRemaining -= simTime;
 		if (slowmoRemaining < 0) {
 			slowmoRemaining = 0;
 		}
 		targetSpeed = pointerIsDown ? 0.075 : 0.3;
-	} else {
+	} else if (!state.game.powerUps.freeze) {
 		const menuPointerDown = isMenuVisible() && pointerIsDown;
 		targetSpeed = menuPointerDown ? 0.025 : 1;
 	}
+
+	// Update special effects (power-ups and combo)
+	updateSpecialEffects(simTime);
+	updateCombo(simTime);
 
 	renderSlowmoStatus(slowmoRemaining / slowmoDuration);
 
@@ -184,10 +188,35 @@ function tick(width, height, simTime, simSpeed, lag) {
 
 					if (pointerSpeedScaled > minPointerSpeed) {
 						target.health--;
-						incrementScore(10);
+						
+						// Handle special block types
+						let scoreGain = 10;
+						if (target.blockType === BLOCK_TYPE_COIN) {
+							scoreGain = 50;
+							incrementCubeCount(1);
+						} else if (target.blockType === BLOCK_TYPE_BOMB) {
+							// Bomb explodes and destroys nearby targets
+							createBombExplosion(target.x, target.y, 200);
+							scoreGain = 100;
+							incrementCubeCount(1);
+						} else if (target.blockType === BLOCK_TYPE_POWERUP_FREEZE) {
+							activateFreeze();
+							scoreGain = 75;
+							incrementCubeCount(1);
+						} else if (target.blockType === BLOCK_TYPE_POWERUP_SHOCKWAVE) {
+							activateShockwave(width, height);
+							scoreGain = 75;
+							incrementCubeCount(1);
+						} else {
+							incrementCubeCount(1);
+						}
 
 						if (target.health <= 0) {
-							incrementCubeCount(1);
+							// Apply combo bonus
+							const finalScore = getComboBonus(scoreGain);
+							incrementScore(finalScore);
+							
+							addComboHit();
 							createBurst(target, forceMultiplier);
 							sparkBurst(hitX, hitY, 8, sparkSpeed);
 							if (target.wireframe) {
@@ -198,6 +227,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 							targets.splice(i, 1);
 							returnTarget(target);
 						} else {
+							// Partial hit - still add to combo
+							addComboHit();
+							incrementScore(getComboBonus(5));
 							sparkBurst(hitX, hitY, 8, sparkSpeed);
 							glueShedSparks(target);
 							updateTargetHealth(target, 0);

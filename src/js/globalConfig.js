@@ -9,6 +9,9 @@ const BLUE =   { r: 0x67, g: 0xd7, b: 0xf0 };
 const GREEN =  { r: 0xa6, g: 0xe0, b: 0x2c };
 const PINK =   { r: 0xfa, g: 0x24, b: 0x73 };
 const ORANGE = { r: 0xfe, g: 0x95, b: 0x22 };
+const YELLOW = { r: 0xff, g: 0xd7, b: 0x00 };
+const PURPLE = { r: 0x9b, g: 0x59, b: 0xb6 };
+const RED =    { r: 0xe7, g: 0x4c, b: 0x3c };
 const allColors = [BLUE, GREEN, PINK, ORANGE];
 
 // Gameplay
@@ -23,6 +26,27 @@ const doubleStrongEnableScore = 2000;
 const slowmoThreshold = 10;
 const strongThreshold = 25;
 const spinnerThreshold = 25;
+const bombThreshold = 15;
+const coinThreshold = 5;
+const powerupThreshold = 30;
+
+// Combo system
+const comboWindow = 2000; // ms to maintain combo
+const maxComboMultiplier = 5;
+
+// Power-up durations
+const freezeDuration = 3000;
+const shockwaveCooldown = 8000;
+
+// Special block types
+const BLOCK_TYPE_NORMAL = Symbol('BLOCK_TYPE_NORMAL');
+const BLOCK_TYPE_STRONG = Symbol('BLOCK_TYPE_STRONG');
+const BLOCK_TYPE_WIREFRAME = Symbol('BLOCK_TYPE_WIREFRAME');
+const BLOCK_TYPE_SPINNER = Symbol('BLOCK_TYPE_SPINNER');
+const BLOCK_TYPE_BOMB = Symbol('BLOCK_TYPE_BOMB');
+const BLOCK_TYPE_COIN = Symbol('BLOCK_TYPE_COIN');
+const BLOCK_TYPE_POWERUP_FREEZE = Symbol('BLOCK_TYPE_POWERUP_FREEZE');
+const BLOCK_TYPE_POWERUP_SHOCKWAVE = Symbol('BLOCK_TYPE_POWERUP_SHOCKWAVE');
 
 // Interaction state
 let pointerIsDown = false;
