@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
 const useref = require('gulp-useref');
 const concat = require('gulp-concat');
 const inline = require('gulp-inline');
@@ -14,7 +13,10 @@ const gzipSize = require('gzip-size');
 
 
 
-gulp.task('clean', () => del.sync('build'));
+gulp.task('clean', done => {
+	del.sync('build');
+	done();
+});
 
 
 // Concat CSS/JS files linked from index.html, and rewrite references.
@@ -91,39 +93,39 @@ gulp.task('inline-minify', () => {
 
 
 
-gulp.task('default', callback => {
-	const finish = () => {
-		// Concatenated JS and CSS files can be deleted, they've been inlined.
-		del.sync('build/combined.js');
-		del.sync('build/combined.css');
-		const sizeBytes = gzipSize.fileSync('build/index.html');
-		console.log(chalk.cyanBright('BUILD COMPLETE'));
-		console.log(chalk.cyanBright('GZIPPED SIZE: ' + chalk.bold(`${(sizeBytes / 1024).toFixed(2)} KB`)));
-		callback();
-	}
-
-	runSequence(
-		'clean',
-		'combine-files',
-		'stripPerfCode',
-		'iife',
-		'inline-minify',
-		finish
-	);
-});
+function finishBuild(done) {
+	// Concatenated JS and CSS files can be deleted, they've been inlined.
+	del.sync('build/combined.js');
+	del.sync('build/combined.css');
+	const sizeBytes = gzipSize.fileSync('build/index.html');
+	console.log(chalk.cyanBright('BUILD COMPLETE'));
+	console.log(chalk.cyanBright('GZIPPED SIZE: ' + chalk.bold(`${(sizeBytes / 1024).toFixed(2)} KB`)));
+	done();
+}
 
 
 
-gulp.task('codepen', callback => {
-	const finish = () => {
-		console.log(chalk.cyanBright('CODEPEN BUILD COMPLETE'));
-		callback();
-	}
+function finishCodepen(done) {
+	console.log(chalk.cyanBright('CODEPEN BUILD COMPLETE'));
+	done();
+}
 
-	runSequence(
-		'clean',
-		'combine-files-codepen',
-		'stripPerfCode',
-		finish
-	);
-});
+
+
+gulp.task('default', gulp.series(
+	'clean',
+	'combine-files',
+	'stripPerfCode',
+	'iife',
+	'inline-minify',
+	finishBuild
+));
+
+
+
+gulp.task('codepen', gulp.series(
+	'clean',
+	'combine-files-codepen',
+	'stripPerfCode',
+	finishCodepen
+));
