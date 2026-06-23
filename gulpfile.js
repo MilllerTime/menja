@@ -3,7 +3,7 @@ const useref = require('gulp-useref');
 const concat = require('gulp-concat');
 const inline = require('gulp-inline');
 const filter = require('gulp-filter');
-const minifyjs = require('gulp-babel-minify');
+const terser = require('gulp-terser');
 const htmlmin = require('gulp-htmlmin');
 const replace = require('gulp-replace');
 const iife = require('gulp-iife');
@@ -72,6 +72,20 @@ gulp.task('iife', () => {
 		}))
 		.pipe(gulp.dest('build'));
 });
+
+
+function minifyjs() {
+	return terser({
+		ecma: 2022,
+		compress: {
+			ecma: 2022
+		},
+		format: {
+			comments: false,
+			ecma: 2022
+		}
+	});
+}
 
 
 // Minify all code, and inline CSS/JS into HTML file.
