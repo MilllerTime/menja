@@ -12,7 +12,9 @@ function draw(ctx, width, height, viewScale) {
 	PERF_START('drawShadows');
 	ctx.fillStyle = shadowColor;
 	ctx.strokeStyle = shadowColor;
-	allShadowPolys.forEach(p => {
+	const shadowPolyCount = allShadowPolys.length;
+	for (let i=0; i<shadowPolyCount; i++) {
+		const p = allShadowPolys[i];
 		if (p.wireframe) {
 			ctx.lineWidth = 2;
 			ctx.beginPath();
@@ -20,8 +22,8 @@ function draw(ctx, width, height, viewScale) {
 			const vCount = vertices.length;
 			const firstV = vertices[0];
 			ctx.moveTo(firstV.x, firstV.y);
-			for (let i=1; i<vCount; i++) {
-				const v = vertices[i];
+			for (let ii=1; ii<vCount; ii++) {
+				const v = vertices[ii];
 				ctx.lineTo(v.x, v.y);
 			}
 			ctx.closePath();
@@ -32,20 +34,22 @@ function draw(ctx, width, height, viewScale) {
 			const vCount = vertices.length;
 			const firstV = vertices[0];
 			ctx.moveTo(firstV.x, firstV.y);
-			for (let i=1; i<vCount; i++) {
-				const v = vertices[i];
+			for (let ii=1; ii<vCount; ii++) {
+				const v = vertices[ii];
 				ctx.lineTo(v.x, v.y);
 			}
 			ctx.closePath();
 			ctx.fill();
 		}
-	});
+	}
 	PERF_END('drawShadows');
 
 	PERF_START('drawPolys');
 
-	allPolys.forEach(p => {
-		if (!p.wireframe && p.normalCamera.z < 0) return;
+	const polyCount = allPolys.length;
+	for (let i=0; i<polyCount; i++) {
+		const p = allPolys[i];
+		if (!p.wireframe && p.normalCamera.z < 0) continue;
 
 		if (p.strokeWidth !== 0) {
 			ctx.lineWidth = p.normalCamera.z < 0 ? p.strokeWidth * 0.5 : p.strokeWidth;
@@ -53,7 +57,8 @@ function draw(ctx, width, height, viewScale) {
 		}
 
 		const { vertices } = p;
-		const lastV = vertices[vertices.length - 1];
+		const vCount = vertices.length;
+		const lastV = vertices[vCount - 1];
 		const fadeOut = p.middle.z > cameraFadeStartZ;
 
 		if (!p.wireframe) {
@@ -73,7 +78,8 @@ function draw(ctx, width, height, viewScale) {
 
 		ctx.beginPath();
 		ctx.moveTo(lastV.x, lastV.y);
-		for (let v of vertices) {
+		for (let ii=0; ii<vCount; ii++) {
+			const v = vertices[ii];
 			ctx.lineTo(v.x, v.y);
 		}
 
@@ -87,7 +93,7 @@ function draw(ctx, width, height, viewScale) {
 		if (fadeOut) {
 			ctx.globalAlpha = 1;
 		}
-	});
+	}
 	PERF_END('drawPolys');
 
 
@@ -98,7 +104,9 @@ function draw(ctx, width, height, viewScale) {
 	ctx.strokeStyle = sparkColor;
 	ctx.lineWidth = sparkThickness;
 	ctx.beginPath();
-	sparks.forEach(spark => {
+	const sparkCount = sparks.length;
+	for (let i=0; i<sparkCount; i++) {
+		const spark = sparks[i];
 		ctx.moveTo(spark.x, spark.y);
 		// Shrink sparks to zero length as they die.
 		// Speed up shrinking as life approaches 0 (root curve).
@@ -108,8 +116,7 @@ function draw(ctx, width, height, viewScale) {
 		// a bit after applying the root curve.
 		const scale = (spark.life / spark.maxLife) ** 0.5 * 1.5;
 		ctx.lineTo(spark.x - spark.xD*scale, spark.y - spark.yD*scale);
-
-	});
+	}
 	ctx.stroke();
 
 

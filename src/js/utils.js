@@ -158,7 +158,12 @@ const makeCooldown = (rechargeTime, units=1) => {
 	return cooldown;
 };
 
-const resetAllCooldowns = () => _allCooldowns.forEach(cooldown => cooldown.reset());
+const resetAllCooldowns = () => {
+	const cooldownCount = _allCooldowns.length;
+	for (let i=0; i<cooldownCount; i++) {
+		_allCooldowns[i].reset();
+	}
+};
 
 const makeSpawner = ({ chance, cooldownPerSpawn, maxSpawns }) => {
 	const cooldown = makeCooldown(cooldownPerSpawn, maxSpawns);
@@ -306,8 +311,9 @@ function transformVertices(vertices, target, tX, tY, tZ, rX, rY, rZ, sX, sY, sZ)
 	const sinZ = Math.sin(rZ);
 	const cosZ = Math.cos(rZ);
 
-	// Using forEach() like map(), but with a (recycled) target array.
-	vertices.forEach((v, i) => {
+	const vertexCount = vertices.length;
+	for (let i=0; i<vertexCount; i++) {
+		const v = vertices[i];
 		const targetVertex = target[i];
 		// X axis rotation
 		const x1 = v.x;
@@ -326,7 +332,7 @@ function transformVertices(vertices, target, tX, tY, tZ, rX, rY, rZ, sX, sY, sZ)
 		targetVertex.x = x3 * sX + tX;
 		targetVertex.y = y3 * sY + tY;
 		targetVertex.z = z3 * sZ + tZ;
-	});
+	}
 }
 
 // 3D projection on a single vertex.

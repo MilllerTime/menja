@@ -114,7 +114,9 @@ const getTarget = (() => {
 
 		const axes = pickOne(axisOptions);
 
-		spinSpeeds.forEach((spinSpeed, i) => {
+		const spinSpeedCount = spinSpeeds.length;
+		for (let i=0; i<spinSpeedCount; i++) {
+			const spinSpeed = spinSpeeds[i];
 			switch (axes[i]) {
 				case 'x':
 					target.rotateXD = spinSpeed;
@@ -126,7 +128,7 @@ const getTarget = (() => {
 					target.rotateZD = spinSpeed;
 					break;
 			}
-		});
+		}
 
 		return target;
 	}

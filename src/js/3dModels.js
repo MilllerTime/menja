@@ -44,9 +44,10 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 	for (let i=1; i<=recursionLevel; i++) {
 		const scale = getScaleAtLevel(i) * 2;
 		const cubeOrigins2 = [];
-		cubeOrigins.forEach(origin => {
-			cubeOrigins2.push(...splitFn(origin, scale));
-		});
+		const originCount = cubeOrigins.length;
+		for (let ii=0; ii<originCount; ii++) {
+			cubeOrigins2.push(...splitFn(cubeOrigins[ii], scale));
+		}
 		cubeOrigins = cubeOrigins2;
 	}
 
@@ -54,14 +55,20 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 
 	// Generate single cube model and scale it.
 	const cubeModel = makeCubeModel({ scale: 1 });
-	cubeModel.vertices.forEach(scaleVector(getScaleAtLevel(recursionLevel)));
+	const scaleVertices = scaleVector(getScaleAtLevel(recursionLevel));
+	const cubeVertexCount = cubeModel.vertices.length;
+	for (let i=0; i<cubeVertexCount; i++) {
+		scaleVertices(cubeModel.vertices[i]);
+	}
 
 	// Compute the max distance x, y, or z origin values will be.
 	// Same result as `Math.max(...cubeOrigins.map(o => o.x))`, but much faster.
 	const maxComponent = getScaleAtLevel(recursionLevel) * (3 ** recursionLevel - 1);
 
 	// Place cube geometry at each origin.
-	cubeOrigins.forEach((origin, cubeIndex) => {
+	const cubeCount = cubeOrigins.length;
+	for (let cubeIndex=0; cubeIndex<cubeCount; cubeIndex++) {
+		const origin = cubeOrigins[cubeIndex];
 		// To compute occlusion (shading), find origin component with greatest
 		// magnitude and normalize it relative to `maxComponent`.
 		const occlusion = Math.max(
@@ -87,7 +94,7 @@ function makeRecursiveCubeModel({ recursionLevel, splitFn, color, scale=1 }) {
 				vIndexes: poly.vIndexes.map(add(cubeIndex * 8))
 			}))
 		);
-	});
+	}
 
 	return finalModel;
 }
@@ -166,9 +173,10 @@ function optimizeModel(model, threshold=0.0001) {
 	};
 
 
-	vertices.forEach((v, i) => {
-		v.originalIndexes = [i];
-	});
+	const vertexCount = vertices.length;
+	for (let i=0; i<vertexCount; i++) {
+		vertices[i].originalIndexes = [i];
+	}
 
 	for (let i=vertices.length-1; i>=0; i--) {
 		for (let ii=i-1; ii>=0; ii--) {
@@ -182,21 +190,25 @@ function optimizeModel(model, threshold=0.0001) {
 		}
 	}
 
-	vertices.forEach((v, i) => {
-		polys.forEach(p => {
-			p.vIndexes.forEach((vi, ii, arr) => {
-				const vo = v.originalIndexes;
-				if (vo.includes(vi)) {
-					arr[ii] = i;
+	const mergedVertexCount = vertices.length;
+	const polyCount = polys.length;
+	for (let i=0; i<mergedVertexCount; i++) {
+		const vo = vertices[i].originalIndexes;
+		for (let ii=0; ii<polyCount; ii++) {
+			const vIndexes = polys[ii].vIndexes;
+			const indexCount = vIndexes.length;
+			for (let iii=0; iii<indexCount; iii++) {
+				if (vo.includes(vIndexes[iii])) {
+					vIndexes[iii] = i;
 				}
-			});
-		});
-	});
+			}
+		}
+	}
 
-	polys.forEach(p => {
-		const vi = p.vIndexes;
-		p.sum = vi[0] + vi[1] + vi[2] + vi[3];
-	});
+	for (let i=0; i<polyCount; i++) {
+		const vi = polys[i].vIndexes;
+		polys[i].sum = vi[0] + vi[1] + vi[2] + vi[3];
+	}
 	polys.sort((a, b) => b.sum - a.sum);
 
 	// Assumptions:

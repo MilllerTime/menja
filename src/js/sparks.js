@@ -44,7 +44,9 @@ function glueShedSparks(target) {
 		copyVerticesTo(target.vertices, glueShedVertices);
 	}
 
-	glueShedVertices.forEach(v => {
+	const glueShedVertexCount = glueShedVertices.length;
+	for (let i=0; i<glueShedVertexCount; i++) {
+		const v = glueShedVertices[i];
 		if (Math.random() < 0.4) {
 			projectVertex(v);
 			addSpark(
@@ -54,7 +56,7 @@ function glueShedSparks(target) {
 				random(-12, 12)
 			);
 		}
-	});
+	}
 }
 
 function returnSpark(spark) {

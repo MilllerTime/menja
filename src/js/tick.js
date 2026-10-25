@@ -11,6 +11,9 @@ let spawnExtra = 0;
 const spawnExtraDelay = 300;
 let targetSpeed = 1;
 
+function compareDepth(a, b) {
+	return b.depth - a.depth;
+}
 
 function tick(width, height, simTime, simSpeed, lag) {
 	PERF_START('frame');
@@ -65,7 +68,10 @@ function tick(width, height, simTime, simSpeed, lag) {
 	const pointerSpeedScaled = pointerSpeed * forceMultiplier;
 
 	// Track points for later calculations, including drawing trail.
-	touchPoints.forEach(p => p.life -= simTime);
+	const touchPointCount = touchPoints.length;
+	for (let i=0; i<touchPointCount; i++) {
+		touchPoints[i].life -= simTime;
+	}
 
 	if (pointerIsDown) {
 		touchPoints.push({
@@ -294,29 +300,43 @@ function tick(width, height, simTime, simSpeed, lag) {
 	allPolys.length = 0;
 	allShadowVertices.length = 0;
 	allShadowPolys.length = 0;
-	targets.forEach(entity => {
+	const targetCount = targets.length;
+	for (let i=0; i<targetCount; i++) {
+		const entity = targets[i];
 		allVertices.push(...entity.vertices);
 		allPolys.push(...entity.polys);
 		allShadowVertices.push(...entity.shadowVertices);
 		allShadowPolys.push(...entity.shadowPolys);
-	});
+	}
 
-	frags.forEach(entity => {
+	const fragCount = frags.length;
+	for (let i=0; i<fragCount; i++) {
+		const entity = frags[i];
 		allVertices.push(...entity.vertices);
 		allPolys.push(...entity.polys);
 		allShadowVertices.push(...entity.shadowVertices);
 		allShadowPolys.push(...entity.shadowPolys);
-	});
+	}
 
 	// Scene calculations/transformations
-	allPolys.forEach(p => computePolyNormal(p, 'normalWorld'));
-	allPolys.forEach(computePolyDepth);
-	allPolys.sort((a, b) => b.depth - a.depth);
+	const polyCount = allPolys.length;
+	for (let i=0; i<polyCount; i++) {
+		computePolyNormal(allPolys[i], 'normalWorld');
+	}
+	for (let i=0; i<polyCount; i++) {
+		computePolyDepth(allPolys[i]);
+	}
+	allPolys.sort(compareDepth);
 
 	// Perspective projection
-	allVertices.forEach(projectVertex);
+	const vertexCount = allVertices.length;
+	for (let i=0; i<vertexCount; i++) {
+		projectVertex(allVertices[i]);
+	}
 
-	allPolys.forEach(p => computePolyNormal(p, 'normalCamera'));
+	for (let i=0; i<polyCount; i++) {
+		computePolyNormal(allPolys[i], 'normalCamera');
+	}
 
 	PERF_END('3D');
 
@@ -331,7 +351,10 @@ function tick(width, height, simTime, simSpeed, lag) {
 		1, 1, 1
 	);
 
-	allShadowPolys.forEach(p => computePolyNormal(p, 'normalWorld'));
+	const shadowPolyCount = allShadowPolys.length;
+	for (let i=0; i<shadowPolyCount; i++) {
+		computePolyNormal(allShadowPolys[i], 'normalWorld');
+	}
 
 	const shadowDistanceMult = Math.hypot(1, 1);
 	const shadowVerticesLength = allShadowVertices.length;
@@ -346,7 +369,9 @@ function tick(width, height, simTime, simSpeed, lag) {
 		-TAU/8, 0, 0,
 		1, 1, 1
 	);
-	allShadowVertices.forEach(projectVertex);
+	for (let i=0; i<shadowVerticesLength; i++) {
+		projectVertex(allShadowVertices[i]);
+	}
 
 	PERF_END('shadows');
 

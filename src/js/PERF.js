@@ -36,13 +36,16 @@ const PERF_UPDATE = () => {
 		let html = '';
 		// Average recorded times, display them, and reset everything
 		const add = (a, b) => a + b;
-		Object.keys(perfTimings).forEach((name, i) => {
+		const names = Object.keys(perfTimings);
+		const nameCount = names.length;
+		for (let i=0; i<nameCount; i++) {
+			const name = names[i];
 			const timings = perfTimings[name];
 			const avgTime = timings.reduce(add) / timings.length;
 			timings.length = 0;
 			if (i > 0) html += '<br>';
 			html += `${name}: ${avgTime.toFixed(2)}ms`;
-		});
+		}
 
 		perfNode.innerHTML = html;
 		perfLastUpdateTime = performance.now();
