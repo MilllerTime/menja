@@ -1,0 +1,26 @@
+{
+	// Assets-only Worker.
+	"name": "menja",
+	"compatibility_date": "2026-10-24",
+	"workers_dev": false,
+	"observability": {
+		"enabled": true,
+		"traces": {
+			"enabled": true
+		}
+	},
+	"assets": {
+		"directory": "./build",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "none"
+	},
+	// Custom Domain: hostname only, no path. Deploy creates the DNS record
+	// and certificate. With `routes` set, workers.dev stays off unless
+	// `workers_dev` is set to true.
+	"routes": [
+		{
+			"pattern": "menja.cmiller.tech",
+			"custom_domain": true
+		}
+	]
+}

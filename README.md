@@ -103,3 +103,11 @@ PERF_END('name-of-subroutine');
 Always use single quotes for the name string, or the function invokation won't be removed for production build.
 
 Care should also be taken to only use a subroutine name once throughout the entire program. If a name is reused, multiple subroutines will have their run times averaged.
+
+
+
+## Hosting
+
+The production site is an assets-only Cloudflare Worker at https://menja.cmiller.tech. `wrangler.jsonc` points the asset directory at `build/` and attaches that hostname as a Custom Domain. Cloudflare creates the DNS record on deploy.
+
+Pushes to `master` are built and deployed by Workers Builds. Wrangler is not a project dependency. Do not run `npx wrangler deploy` from a local checkout.

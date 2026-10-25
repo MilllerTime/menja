@@ -107,6 +107,14 @@ gulp.task('inline-minify', () => {
 
 
 
+// index.html references ico2.png beside the page. Everything else is inlined
+// into build/index.html, so the icon has to be copied into that directory.
+gulp.task('copy-favicon', () => {
+	return gulp.src('ico2.png')
+		.pipe(gulp.dest('build'));
+});
+
+
 function finishBuild(done) {
 	// Concatenated JS and CSS files can be deleted, they've been inlined.
 	del.sync('build/combined.js');
@@ -132,6 +140,7 @@ gulp.task('default', gulp.series(
 	'stripPerfCode',
 	'iife',
 	'inline-minify',
+	'copy-favicon',
 	finishBuild
 ));
 

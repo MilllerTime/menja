@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A game about smashing cubes.",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "start": "browser-sync start --server src --files src",
     "build": "gulp",
